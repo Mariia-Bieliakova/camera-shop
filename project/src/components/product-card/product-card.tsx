@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { Camera } from '../../types/camera';
 import IconStar from '../icon-star/icon-star';
 
@@ -8,6 +9,13 @@ type ProductCardProps = {
 }
 
 function ProductCard ({camera}: ProductCardProps): JSX.Element {
+  const fullStars = Array(camera.rating).fill(
+    <IconStar full />
+  );
+  const emptyStars = Array(MAX_RATING - camera.rating).fill(
+    <IconStar />
+  );
+
 
   return (
     <div className="product-card">
@@ -19,12 +27,17 @@ function ProductCard ({camera}: ProductCardProps): JSX.Element {
       </div>
       <div className="product-card__info">
         <div className="rate product-card__rate">
-          {Array(camera.rating).fill(
-            <IconStar full />
-          )}
-          {Array(MAX_RATING - camera.rating).fill(
-            <IconStar />
-          )}
+          {fullStars.map(() => {
+            const key = nanoid();
+
+            return <IconStar full key={key}/>;
+          })}
+          {emptyStars.map(() => {
+            const key = nanoid();
+
+            return <IconStar key={key}/>;
+          })}
+
           <p className="visually-hidden">Рейтинг: {camera.rating}</p>
           <p className="rate__count">
             <span className="visually-hidden">Всего оценок:</span>
