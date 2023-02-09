@@ -85,8 +85,8 @@ function Product (): JSX.Element {
               <div className="container">
                 <div className="product__img">
                   <picture>
-                    <source type="image/webp" srcSet="img/content/img1.webp, img/content/img1@2x.webp 2x" />
-                    <img src="img/content/img1.jpg" srcSet="img/content/img1@2x.jpg 2x" width="560" height="480" alt="Ретрокамера Das Auge IV" />
+                    <source type="image/webp" srcSet="/img/content/img1.webp, /img/content/img1@2x.webp 2x" />
+                    <img src="/img/content/img1.jpg" srcSet="/img/content/img1@2x.jpg 2x" width="560" height="480" alt="Ретрокамера Das Auge IV" />
                   </picture>
                 </div>
                 <div className="product__content">
@@ -169,8 +169,8 @@ function Product (): JSX.Element {
                     <div className="product-card is-active">
                       <div className="product-card__img">
                         <picture>
-                          <source type="image/webp" srcSet="img/content/img9.webp, img/content/img9@2x.webp 2x" />
-                          <img src="img/content/img9.jpg" srcSet="img/content/img9@2x.jpg 2x" width="280" height="240" alt="Фотоаппарат FastShot MR-5" />
+                          <source type="image/webp" srcSet="/img/content/img9.webp, /img/content/img9@2x.webp 2x" />
+                          <img src="/img/content/img9.jpg" srcSet="/img/content/img9@2x.jpg 2x" width="280" height="240" alt="Фотоаппарат FastShot MR-5" />
                         </picture>
                       </div>
                       <div className="product-card__info">
@@ -212,8 +212,8 @@ function Product (): JSX.Element {
                     <div className="product-card is-active">
                       <div className="product-card__img">
                         <picture>
-                          <source type="image/webp" srcSet="img/content/img1.webp, img/content/img1@2x.webp 2x" />
-                          <img src="img/content/img1.jpg" srcSet="img/content/img1@2x.jpg 2x" width="280" height="240" alt="Ретрокамера «Das Auge IV»" />
+                          <source type="image/webp" srcSet="/img/content/img1.webp, /img/content/img1@2x.webp 2x" />
+                          <img src="/img/content/img1.jpg" srcSet="/img/content/img1@2x.jpg 2x" width="280" height="240" alt="Ретрокамера «Das Auge IV»" />
                         </picture>
                       </div>
                       <div className="product-card__info">
@@ -255,8 +255,8 @@ function Product (): JSX.Element {
                     <div className="product-card is-active">
                       <div className="product-card__img">
                         <picture>
-                          <source type="image/webp" srcSet="img/content/img5.webp, img/content/img5@2x.webp 2x" />
-                          <img src="img/content/img5.jpg" srcSet="img/content/img5@2x.jpg 2x" width="280" height="240" alt="Фотоаппарат Instaprinter P2" />
+                          <source type="image/webp" srcSet="/img/content/img5.webp, /img/content/img5@2x.webp 2x" />
+                          <img src="/img/content/img5.jpg" srcSet="/img/content/img5@2x.jpg 2x" width="280" height="240" alt="Фотоаппарат Instaprinter P2" />
                         </picture>
                       </div>
                       <div className="product-card__info">
@@ -298,8 +298,8 @@ function Product (): JSX.Element {
                     <div className="product-card">
                       <div className="product-card__img">
                         <picture>
-                          <source type="image/webp" srcSet="img/content/img4.webp, img/content/img4@2x.webp 2x" />
-                          <img src="img/content/img4.jpg" srcSet="img/content/img4@2x.jpg 2x" width="280" height="240" alt="Фотоаппарат FastShot MR-5" />
+                          <source type="image/webp" srcSet="/img/content/img4.webp, /img/content/img4@2x.webp 2x" />
+                          <img src="/img/content/img4.jpg" srcSet="/img/content/img4@2x.jpg 2x" width="280" height="240" alt="Фотоаппарат FastShot MR-5" />
                         </picture>
                       </div>
                       <div className="product-card__info">
@@ -341,8 +341,8 @@ function Product (): JSX.Element {
                     <div className="product-card">
                       <div className="product-card__img">
                         <picture>
-                          <source type="image/webp" srcSet="img/content/img3.webp, img/content/img3@2x.webp 2x" />
-                          <img src="img/content/img3.jpg" srcSet="img/content/img3@2x.jpg 2x" width="280" height="240" alt="Ретрокамера «Das Auge IV»" />
+                          <source type="image/webp" srcSet="/img/content/img3.webp, /img/content/img3@2x.webp 2x" />
+                          <img src="/img/content/img3.jpg" srcSet="/img/content/img3@2x.jpg 2x" width="280" height="240" alt="Ретрокамера «Das Auge IV»" />
                         </picture>
                       </div>
                       <div className="product-card__info">
@@ -384,8 +384,8 @@ function Product (): JSX.Element {
                     <div className="product-card">
                       <div className="product-card__img">
                         <picture>
-                          <source type="image/webp" srcSet="img/content/img11.webp, img/content/img11@2x.webp 2x" />
-                          <img src="img/content/img11.jpg" srcSet="img/content/img11@2x.jpg 2x" width="280" height="240" alt="Фотоаппарат Instaprinter P2" />
+                          <source type="image/webp" srcSet="/img/content/img11.webp, /img/content/img11@2x.webp 2x" />
+                          <img src="/img/content/img11.jpg" srcSet="/img/content/img11@2x.jpg 2x" width="280" height="240" alt="Фотоаппарат Instaprinter P2" />
                         </picture>
                       </div>
                       <div className="product-card__info">

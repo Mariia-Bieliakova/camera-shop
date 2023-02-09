@@ -1,3 +1,4 @@
+import { HelmetProvider } from 'react-helmet-async';
 import Main from '../../pages/main/main';
 import Product from '../../pages/product/product';
 import Basket from '../../pages/basket/basket';
@@ -6,23 +7,25 @@ import { AppRoute } from '../../const';
 
 function App(): JSX.Element {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path={AppRoute.Root}>
-          <Route index element={<Main />} />
-          <Route
-            path={AppRoute.Basket}
-            element={<Basket />}
-          />
-          <Route path={AppRoute.Camera}>
+    <HelmetProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path={AppRoute.Root}>
+            <Route index element={<Main />} />
             <Route
-              path={AppRoute.Product}
-              element={<Product />}
+              path={AppRoute.Basket}
+              element={<Basket />}
             />
+            <Route path={AppRoute.Camera}>
+              <Route
+                path={AppRoute.Product}
+                element={<Product />}
+              />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 
