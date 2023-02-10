@@ -16,12 +16,10 @@ function App(): JSX.Element {
               path={AppRoute.Basket}
               element={<Basket />}
             />
-            <Route path={AppRoute.Camera}>
-              <Route
-                path={AppRoute.Product}
-                element={<Product />}
-              />
-            </Route>
+            <Route
+              path={AppRoute.Product}
+              element={<Product />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

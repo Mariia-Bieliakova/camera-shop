@@ -1,8 +1,7 @@
 export enum AppRoute {
   Root = '/',
   Basket = '/basket',
-  Camera = 'cameras/',
-  Product = ':id'
+  Product = 'cameras/:id'
 }
 
 export enum Category {
@@ -38,7 +37,8 @@ export enum NameSpace {
 }
 
 export enum APIRoute {
-  Cameras = '/cameras'
+  Cameras = '/cameras',
+  Promo = '/promo'
 }
 
 export enum FetchStatus {

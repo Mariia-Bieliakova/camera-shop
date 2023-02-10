@@ -1,4 +1,6 @@
 import { nanoid } from 'nanoid';
+import { generatePath, Link } from 'react-router-dom';
+import { AppRoute } from '../../const';
 import { Camera } from '../../types/camera';
 import IconStar from '../icon-star/icon-star';
 
@@ -54,9 +56,12 @@ function ProductCard ({camera}: ProductCardProps): JSX.Element {
         <button className="btn btn--purple product-card__btn" type="button">
           Купить
         </button>
-        <a className="btn btn--transparent" href="/#">
+        <Link
+          className="btn btn--transparent"
+          to={`${AppRoute.Root}${generatePath(AppRoute.Product, {id: String(camera.id)})}`}
+        >
           Подробнее
-        </a>
+        </Link>
       </div>
     </div>
   );
