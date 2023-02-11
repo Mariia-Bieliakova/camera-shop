@@ -12,6 +12,7 @@ function App(): JSX.Element {
         <Routes>
           <Route path={AppRoute.Root}>
             <Route index element={<Main />} />
+            <Route path={AppRoute.Catalog} element={<Main />}/>
             <Route
               path={AppRoute.Basket}
               element={<Basket />}

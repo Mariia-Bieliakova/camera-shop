@@ -1,5 +1,9 @@
+export const START_PAGE = 1;
+export const CAMERAS_PER_PAGE = 9;
+
 export enum AppRoute {
   Root = '/',
+  Catalog = 'catalog/:page',
   Basket = '/basket',
   Product = 'cameras/:id'
 }
@@ -33,7 +37,8 @@ export const SortOrder = {
 } as const;
 
 export enum NameSpace {
-  Camera = 'CAMERA'
+  Camera = 'CAMERA',
+  Ui = 'UI'
 }
 
 export enum APIRoute {

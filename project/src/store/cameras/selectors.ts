@@ -9,6 +9,8 @@ export const getCamerasFetchStatus = (state: State): FetchStatus => state[NameSp
 
 export const getPromo = (state: State): Promo | null => state[NameSpace.Camera].promo;
 
+export const getCamerasOnPage = (state: State): Camera[] => state[NameSpace.Camera].camerasOnPage;
+
 export const getPromoFetchStatus = (state: State): FetchStatus => state[NameSpace.Camera].fetchPromoStatus;
 
 export const selectPromoStatus = createSelector(

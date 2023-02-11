@@ -5,11 +5,23 @@ import SortingForm from '../../components/sorting-form/sorting-form';
 import ProductCard from '../../components/product-card/product-card';
 import Pagination from '../../components/pagination/pagination';
 import Layout from '../../components/layout/layout';
-import { useAppSelector } from '../../hooks';
-import { getCameras } from '../../store/cameras/selectors';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getCamerasOnPage } from '../../store/cameras/selectors';
+import { getCurrentPage } from '../../store/ui/selectors';
+import { useEffect } from 'react';
+import { fetchCamerasPerPage } from '../../store/api-actions';
+import { CAMERAS_PER_PAGE } from '../../const';
 
 function Main (): JSX.Element {
-  const cameras = useAppSelector(getCameras);
+  const currentPage = useAppSelector(getCurrentPage);
+  const dispatch = useAppDispatch();
+  const camerasOnPage = useAppSelector(getCamerasOnPage);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const startIndex = (currentPage - 1) * CAMERAS_PER_PAGE;
+    dispatch(fetchCamerasPerPage([startIndex, CAMERAS_PER_PAGE]));
+  }, [currentPage, dispatch]);
 
   return (
     <div className="wrapper">
@@ -32,7 +44,7 @@ function Main (): JSX.Element {
                       <SortingForm />
                     </div>
                     <div className="cards catalog__cards">
-                      {cameras.map((camera) => (
+                      {camerasOnPage.map((camera) => (
                         <ProductCard
                           camera={camera}
                           key={camera.id}
