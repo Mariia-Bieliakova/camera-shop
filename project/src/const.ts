@@ -1,5 +1,6 @@
 export const START_PAGE = 1;
 export const CAMERAS_PER_PAGE = 9;
+export const TOTAL_COUNT_HEADER = 'x-total-count';
 
 export enum AppRoute {
   Root = '/',

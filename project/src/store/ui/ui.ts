@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CAMERAS_PER_PAGE, NameSpace, START_PAGE } from '../../const';
-import { fetchCamerasAction } from '../api-actions';
 
 type UI = {
   currentPage: number;
@@ -22,14 +21,12 @@ export const ui = createSlice({
       const {page} = action.payload;
 
       state.currentPage = page;
+    },
+    setPagesCount: (state, action: PayloadAction<{camerasCount: number}>) => {
+      const {camerasCount} = action.payload;
+      state.pages = Math.ceil((camerasCount / state.camerasPerPage));
     }
-  },
-  extraReducers(builder) {
-    builder
-      .addCase(fetchCamerasAction.fulfilled, (state, action) => {
-        state.pages = Math.ceil((action.payload.length) / (state.camerasPerPage));
-      });
   },
 });
 
-export const {changePage} = ui.actions;
+export const {changePage, setPagesCount} = ui.actions;

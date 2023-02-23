@@ -20,6 +20,7 @@ function Main (): JSX.Element {
   useEffect(() => {
     window.scrollTo(0, 0);
     const startIndex = (currentPage - 1) * CAMERAS_PER_PAGE;
+
     dispatch(fetchCamerasPerPage([startIndex, CAMERAS_PER_PAGE]));
   }, [currentPage, dispatch]);
 

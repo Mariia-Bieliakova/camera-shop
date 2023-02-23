@@ -1,10 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { FetchStatus, NameSpace } from '../../const';
 import { Camera, Promo } from '../../types/camera';
-import { fetchCamerasAction, fetchCamerasPerPage, fetchPromoAction } from '../api-actions';
+import { fetchCamerasPerPage, fetchPromoAction } from '../api-actions';
 
 type Cameras = {
-  cameras: Camera[];
   promo: Promo | null;
   camerasOnPage: Camera[];
   fetchCamerasStatus: FetchStatus;
@@ -12,7 +11,6 @@ type Cameras = {
 }
 
 const initialState: Cameras = {
-  cameras: [],
   camerasOnPage: [],
   promo: null,
   fetchCamerasStatus: FetchStatus.Idle,
@@ -25,16 +23,6 @@ export const cameras = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(fetchCamerasAction.pending, (state) => {
-        state.fetchCamerasStatus = FetchStatus.Pending;
-      })
-      .addCase(fetchCamerasAction.rejected, (state) => {
-        state.fetchCamerasStatus = FetchStatus.Error;
-      })
-      .addCase(fetchCamerasAction.fulfilled, (state, action) => {
-        state.fetchCamerasStatus = FetchStatus.Success;
-        state.cameras = action.payload;
-      })
       .addCase(fetchPromoAction.pending, (state) => {
         state.fetchPromoStatus = FetchStatus.Pending;
       })
@@ -46,7 +34,14 @@ export const cameras = createSlice({
         state.promo = action.payload;
       })
       .addCase(fetchCamerasPerPage.fulfilled, (state, action) => {
+        state.fetchCamerasStatus = FetchStatus.Success;
         state.camerasOnPage = action.payload;
+      })
+      .addCase(fetchCamerasPerPage.pending, (state) => {
+        state.fetchCamerasStatus = FetchStatus.Pending;
+      })
+      .addCase(fetchCamerasPerPage.rejected, (state) => {
+        state.fetchCamerasStatus = FetchStatus.Error;
       });
   },
 });
