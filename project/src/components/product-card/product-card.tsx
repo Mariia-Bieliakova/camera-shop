@@ -1,16 +1,18 @@
 import { nanoid } from 'nanoid';
 import { generatePath, Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, MAX_RATING } from '../../const';
+import { useAppDispatch } from '../../hooks';
+import { openAddToCartModal, setActiveCamera } from '../../store/modals/modals';
 import { Camera } from '../../types/camera';
 import IconStar from '../icon-star/icon-star';
-
-const MAX_RATING = 5;
 
 type ProductCardProps = {
   camera: Camera;
 }
 
 function ProductCard ({camera}: ProductCardProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const fullStars = Array(camera.rating).fill(
     <IconStar full />
   );
@@ -18,6 +20,10 @@ function ProductCard ({camera}: ProductCardProps): JSX.Element {
     <IconStar />
   );
 
+  const handleToBuyButtonClick = () => {
+    dispatch(setActiveCamera({camera}));
+    dispatch(openAddToCartModal());
+  };
 
   return (
     <div className="product-card">
@@ -46,14 +52,20 @@ function ProductCard ({camera}: ProductCardProps): JSX.Element {
             {camera.reviewCount}
           </p>
         </div>
-        <p className="product-card__title">{camera.name}</p>
-        <p className="product-card__price">
-          <span className="visually-hidden">Цена:</span>
-          {camera.price}
-        </p>
+        <div>
+          <p className="product-card__title">{camera.name}</p>
+          <p className="product-card__price">
+            <span className="visually-hidden">Цена:</span>
+            {`${camera.price} ₽`}
+          </p>
+        </div>
       </div>
       <div className="product-card__buttons">
-        <button className="btn btn--purple product-card__btn" type="button">
+        <button
+          className="btn btn--purple product-card__btn"
+          type="button"
+          onClick={handleToBuyButtonClick}
+        >
           Купить
         </button>
         <Link

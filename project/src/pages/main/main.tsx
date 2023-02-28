@@ -11,6 +11,7 @@ import { getCurrentPage } from '../../store/ui/selectors';
 import { useEffect } from 'react';
 import { fetchCamerasPerPage } from '../../store/api-actions';
 import { CAMERAS_PER_PAGE } from '../../const';
+import ModalAddCart from '../../components/modal-add-cart/modal-add-cart';
 
 function Main (): JSX.Element {
   const currentPage = useAppSelector(getCurrentPage);
@@ -58,6 +59,7 @@ function Main (): JSX.Element {
               </div>
             </section>
           </div>
+          <ModalAddCart />
         </main>
       </Layout>
     </div>

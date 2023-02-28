@@ -40,3 +40,19 @@ export const fetchPromoAction = createAsyncThunk<Promo, undefined, {
     }
   }
 );
+
+export const fetchCurrentCamera = createAsyncThunk<Camera, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'data/fetchCurrentCamera',
+  async(id, {extra: api, rejectWithValue}) => {
+    try {
+      const {data} = await api.get<Camera>(`${APIRoute.Cameras}/${id}`);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
