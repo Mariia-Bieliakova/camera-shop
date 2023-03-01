@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumbs from '../../components/breadcrumbs/breadcrumbs';
 import IconStar from '../../components/icon-star/icon-star';
@@ -7,17 +7,24 @@ import Layout from '../../components/layout/layout';
 import ModalAddCart from '../../components/modal-add-cart/modal-add-cart';
 import ReviewBlock from '../../components/review-block/review-block';
 import SimilarProducts from '../../components/similar-products/similar-products';
-import { MAX_RATING } from '../../const';
+import TabCharacteristic from '../../components/tab-characteristic/tab-characteristic';
+import TabDescription from '../../components/tab-description/tab-description';
+import { MAX_RATING, TabType } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchCurrentCamera } from '../../store/api-actions';
 import { getCurrentProduct, selectCurrentProductStatus } from '../../store/cameras/selectors';
 import { openAddToCartModal, setActiveCamera } from '../../store/modals/modals';
+import { getAddToCartModalStatus } from '../../store/modals/selectors';
+import cn from 'classnames';
 
 function Product (): JSX.Element {
+  const [tabType, setTabType] = useState<TabType>(TabType.Characteristic);
+
   const {id} = useParams();
   const dispatch = useAppDispatch();
   const {isLoading, isError} = useAppSelector(selectCurrentProductStatus);
   const camera = useAppSelector(getCurrentProduct);
+  const isModalActive = useAppSelector(getAddToCartModalStatus);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -44,10 +51,6 @@ function Product (): JSX.Element {
     rating,
     reviewCount,
     price,
-    vendorCode,
-    category,
-    type,
-    level,
     description
   } = camera;
 
@@ -58,10 +61,27 @@ function Product (): JSX.Element {
     <IconStar />
   );
 
+  const tabButtonCharClass = cn('tabs__control', {
+    'is-active': tabType === TabType.Characteristic
+  });
+
+  const tabButtonDescriptionClass = cn('tabs__control', {
+    'is-active': tabType === TabType.Description
+  });
+
   const handleToBuyButtonClick = () => {
     dispatch(setActiveCamera({camera}));
     dispatch(openAddToCartModal());
   };
+
+  const handleCharButtonClick = () => {
+    setTabType(TabType.Characteristic);
+  };
+
+  const handleDescriptionButtonClick = () => {
+    setTabType(TabType.Description);
+  };
+
 
   return (
     <div className="wrapper">
@@ -115,35 +135,28 @@ function Product (): JSX.Element {
                     </button>
                     <div className="tabs product__tabs">
                       <div className="tabs__controls product__tabs-controls">
-                        <button className="tabs__control" type="button">Характеристики</button>
-                        <button className="tabs__control is-active" type="button">Описание</button>
+                        <button
+                          className={tabButtonCharClass}
+                          type="button"
+                          onClick={handleCharButtonClick}
+                        > Характеристики
+                        </button>
+                        <button
+                          className={tabButtonDescriptionClass}
+                          type="button"
+                          onClick={handleDescriptionButtonClick}
+                        > Описание
+                        </button>
                       </div>
                       <div className="tabs__content">
-                        <div className="tabs__element">
-                          <ul className="product__tabs-list">
-                            <li className="item-list">
-                              <span className="item-list__title">Артикул:</span>
-                              <p className="item-list__text"> {vendorCode}</p>
-                            </li>
-                            <li className="item-list">
-                              <span className="item-list__title">Категория:</span>
-                              <p className="item-list__text">{category}</p>
-                            </li>
-                            <li className="item-list">
-                              <span className="item-list__title">Тип камеры:</span>
-                              <p className="item-list__text">{type}</p>
-                            </li>
-                            <li className="item-list">
-                              <span className="item-list__title">Уровень:</span>
-                              <p className="item-list__text">{level}</p>
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="tabs__element is-active">
-                          <div className="product__tabs-text">
-                            <p>{description}</p>
-                          </div>
-                        </div>
+                        <TabCharacteristic
+                          camera={camera}
+                          tabType={tabType}
+                        />
+                        <TabDescription
+                          description={description}
+                          tabType={tabType}
+                        />
                       </div>
                     </div>
                   </div>
@@ -157,7 +170,7 @@ function Product (): JSX.Element {
               <ReviewBlock />
             </div>
           </div>
-          <ModalAddCart />
+          {isModalActive && <ModalAddCart />}
         </main>
         <a className="up-btn" href="#header">
           <svg width="12" height="18" aria-hidden="true">

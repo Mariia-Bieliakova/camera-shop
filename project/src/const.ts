@@ -56,3 +56,8 @@ export enum FetchStatus {
   Success = 'Success',
   Error = 'Error'
 }
+
+export enum TabType {
+  Description = 'description',
+  Characteristic = 'characteristic'
+}

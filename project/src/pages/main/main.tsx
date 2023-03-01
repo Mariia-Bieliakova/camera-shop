@@ -12,11 +12,13 @@ import { useEffect } from 'react';
 import { fetchCamerasPerPage } from '../../store/api-actions';
 import { CAMERAS_PER_PAGE } from '../../const';
 import ModalAddCart from '../../components/modal-add-cart/modal-add-cart';
+import { getAddToCartModalStatus } from '../../store/modals/selectors';
 
 function Main (): JSX.Element {
   const currentPage = useAppSelector(getCurrentPage);
   const dispatch = useAppDispatch();
   const camerasOnPage = useAppSelector(getCamerasOnPage);
+  const isModalActive = useAppSelector(getAddToCartModalStatus);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -59,7 +61,7 @@ function Main (): JSX.Element {
               </div>
             </section>
           </div>
-          <ModalAddCart />
+          {isModalActive && <ModalAddCart />}
         </main>
       </Layout>
     </div>
