@@ -47,7 +47,8 @@ export enum NameSpace {
 
 export enum APIRoute {
   Cameras = '/cameras',
-  Promo = '/promo'
+  Promo = '/promo',
+  Similar = '/similar'
 }
 
 export enum FetchStatus {

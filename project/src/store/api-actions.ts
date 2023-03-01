@@ -34,6 +34,7 @@ export const fetchPromoAction = createAsyncThunk<Promo, undefined, {
   async (_arg, {extra: api, rejectWithValue}) => {
     try {
       const {data} = await api.get<Promo>(APIRoute.Promo);
+
       return data;
     } catch (err) {
       return rejectWithValue(err);
@@ -50,6 +51,23 @@ export const fetchCurrentCamera = createAsyncThunk<Camera, string, {
   async(id, {extra: api, rejectWithValue}) => {
     try {
       const {data} = await api.get<Camera>(`${APIRoute.Cameras}/${id}`);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const fetchSimilarCameras = createAsyncThunk<Camera[], string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'data/fetchSimilarCameras',
+  async(id, {extra: api, rejectWithValue}) => {
+    try {
+      const {data} = await api.get<Camera[]>(`${APIRoute.Cameras}/${id}${APIRoute.Similar}`);
+
       return data;
     } catch (err) {
       return rejectWithValue(err);

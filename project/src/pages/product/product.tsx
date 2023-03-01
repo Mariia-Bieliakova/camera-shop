@@ -11,8 +11,8 @@ import TabCharacteristic from '../../components/tab-characteristic/tab-character
 import TabDescription from '../../components/tab-description/tab-description';
 import { MAX_RATING, TabType } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { fetchCurrentCamera } from '../../store/api-actions';
-import { getCurrentProduct, selectCurrentProductStatus } from '../../store/cameras/selectors';
+import { fetchCurrentCamera, fetchSimilarCameras } from '../../store/api-actions';
+import { getCurrentProduct, getSimilarCameras, selectCurrentProductStatus } from '../../store/cameras/selectors';
 import { openAddToCartModal, setActiveCamera } from '../../store/modals/modals';
 import { getAddToCartModalStatus } from '../../store/modals/selectors';
 import cn from 'classnames';
@@ -24,6 +24,7 @@ function Product (): JSX.Element {
   const dispatch = useAppDispatch();
   const {isLoading, isError} = useAppSelector(selectCurrentProductStatus);
   const camera = useAppSelector(getCurrentProduct);
+  const similarCameras = useAppSelector(getSimilarCameras);
   const isModalActive = useAppSelector(getAddToCartModalStatus);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ function Product (): JSX.Element {
 
     if (id) {
       dispatch(fetchCurrentCamera(id));
+      dispatch(fetchSimilarCameras(id));
     }
   }, [id, dispatch]);
 
@@ -164,7 +166,8 @@ function Product (): JSX.Element {
               </section>
             </div>
             <div className="page-content__section">
-              <SimilarProducts />
+              {similarCameras.length > 0 &&
+                <SimilarProducts cameras={similarCameras}/>}
             </div>
             <div className="page-content__section">
               <ReviewBlock />
