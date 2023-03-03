@@ -42,13 +42,15 @@ export const SortOrder = {
 export enum NameSpace {
   Camera = 'CAMERA',
   Ui = 'UI',
-  Modals = 'MODALS'
+  Modals = 'MODALS',
+  Reviews = 'REVIEWS'
 }
 
 export enum APIRoute {
   Cameras = '/cameras',
   Promo = '/promo',
-  Similar = '/similar'
+  Similar = '/similar',
+  Reviews = '/reviews'
 }
 
 export enum FetchStatus {

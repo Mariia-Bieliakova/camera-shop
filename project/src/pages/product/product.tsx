@@ -11,11 +11,12 @@ import TabCharacteristic from '../../components/tab-characteristic/tab-character
 import TabDescription from '../../components/tab-description/tab-description';
 import { MAX_RATING, TabType } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { fetchCurrentCamera, fetchSimilarCameras } from '../../store/api-actions';
+import { fetchCurrentCamera, fetchReviews, fetchSimilarCameras } from '../../store/api-actions';
 import { getCurrentProduct, getSimilarCameras, selectCurrentProductStatus } from '../../store/cameras/selectors';
 import { openAddToCartModal, setActiveCamera } from '../../store/modals/modals';
 import { getAddToCartModalStatus } from '../../store/modals/selectors';
 import cn from 'classnames';
+import { getReviews } from '../../store/reviews/selectors';
 
 function Product (): JSX.Element {
   const [tabType, setTabType] = useState<TabType>(TabType.Characteristic);
@@ -25,6 +26,7 @@ function Product (): JSX.Element {
   const {isLoading, isError} = useAppSelector(selectCurrentProductStatus);
   const camera = useAppSelector(getCurrentProduct);
   const similarCameras = useAppSelector(getSimilarCameras);
+  const reviews = useAppSelector(getReviews);
   const isModalActive = useAppSelector(getAddToCartModalStatus);
 
   useEffect(() => {
@@ -33,6 +35,7 @@ function Product (): JSX.Element {
     if (id) {
       dispatch(fetchCurrentCamera(id));
       dispatch(fetchSimilarCameras(id));
+      dispatch(fetchReviews(id));
     }
   }, [id, dispatch]);
 
@@ -170,7 +173,8 @@ function Product (): JSX.Element {
                 <SimilarProducts cameras={similarCameras}/>}
             </div>
             <div className="page-content__section">
-              <ReviewBlock />
+              {reviews.length > 0 &&
+                <ReviewBlock reviews={reviews}/>}
             </div>
           </div>
           {isModalActive && <ModalAddCart />}

@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 import { APIRoute, TOTAL_COUNT_HEADER } from '../const';
 import { Camera, Promo } from '../types/camera';
+import { Review } from '../types/review';
 import { AppDispatch, State } from '../types/state';
 import { setPagesCount } from './ui/ui';
 
@@ -51,6 +52,7 @@ export const fetchCurrentCamera = createAsyncThunk<Camera, string, {
   async(id, {extra: api, rejectWithValue}) => {
     try {
       const {data} = await api.get<Camera>(`${APIRoute.Cameras}/${id}`);
+
       return data;
     } catch (err) {
       return rejectWithValue(err);
@@ -70,6 +72,23 @@ export const fetchSimilarCameras = createAsyncThunk<Camera[], string, {
 
       return data;
     } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const fetchReviews = createAsyncThunk<Review[], string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'data/fetchReviews',
+  async(id, {extra: api, rejectWithValue}) => {
+    try {
+      const {data} = await api.get<Review[]>(`${APIRoute.Cameras}/${id}${APIRoute.Reviews}`);
+
+      return data;
+    } catch(err) {
       return rejectWithValue(err);
     }
   }
