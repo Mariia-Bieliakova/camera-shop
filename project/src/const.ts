@@ -8,7 +8,8 @@ export enum AppRoute {
   Root = '/',
   Catalog = 'catalog/:page',
   Basket = '/basket',
-  Product = 'cameras/:id'
+  Product = 'cameras/:id',
+  NotFound = '*'
 }
 
 export enum Category {
