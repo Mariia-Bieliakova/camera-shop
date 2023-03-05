@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 import { APIRoute, TOTAL_COUNT_HEADER } from '../const';
 import { Camera, Promo } from '../types/camera';
-import { Review } from '../types/review';
+import { Review, ReviewPost } from '../types/review';
 import { AppDispatch, State } from '../types/state';
 import { setPagesCount } from './ui/ui';
 
@@ -90,6 +90,23 @@ export const fetchReviews = createAsyncThunk<Review[], string, {
       return data;
     } catch(err) {
       return rejectWithValue(err);
+    }
+  }
+);
+
+export const postReview = createAsyncThunk<Review | undefined, ReviewPost, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'reviews/postReview',
+  async(review, {extra: api, rejectWithValue}) => {
+    try {
+      const {data} = await api.post<Review>(APIRoute.Reviews, review);
+
+      return data;
+    } catch (err) {
+      rejectWithValue(err);
     }
   }
 );

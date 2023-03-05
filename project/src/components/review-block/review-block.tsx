@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { sortReviewsByDate } from '../../camera';
+import { useAppDispatch } from '../../hooks';
+import { openReviewModal } from '../../store/modals/modals';
 import { Review } from '../../types/review';
 import ReviewItem from '../review-item/review-item';
 
@@ -10,6 +12,7 @@ type ReviewBlockProps = {
 }
 
 function ReviewBlock ({reviews}: ReviewBlockProps): JSX.Element {
+  const dispatch = useAppDispatch();
   const [displayedReviews, setDisplayedReviews] = useState(REVIEW_COUNT_PER_STEP);
 
   const reviewsCount = reviews.length;
@@ -25,12 +28,21 @@ function ReviewBlock ({reviews}: ReviewBlockProps): JSX.Element {
     setDisplayedReviews(reviewsToShow);
   };
 
+  const handleAddReviewButtonClick = () => {
+    dispatch(openReviewModal());
+  };
+
   return (
     <section className="review-block">
       <div className="container">
         <div className="page-content__headed">
           <h2 className="title title--h3">Отзывы</h2>
-          <button className="btn" type="button">Оставить свой отзыв</button>
+          <button
+            className="btn"
+            type="button"
+            onClick={handleAddReviewButtonClick}
+          >Оставить свой отзыв
+          </button>
         </div>
         <ul className="review-block__list">
           {sortedReviews.slice(0, displayedReviews).map((review) => <ReviewItem reviewItem={review} key={review.id}/>)}

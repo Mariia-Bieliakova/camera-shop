@@ -14,9 +14,11 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchCurrentCamera, fetchReviews, fetchSimilarCameras } from '../../store/api-actions';
 import { getCurrentProduct, getSimilarCameras, selectCurrentProductStatus } from '../../store/cameras/selectors';
 import { openAddToCartModal, setActiveCamera } from '../../store/modals/modals';
-import { getAddToCartModalStatus } from '../../store/modals/selectors';
+import { getAddToCartModalStatus, getReviewModalStatus, getReviewSuccessModalStatus } from '../../store/modals/selectors';
 import cn from 'classnames';
 import { getReviews } from '../../store/reviews/selectors';
+import ModalReview from '../../components/modal-review/modal-review';
+import ModalReviewSuccess from '../../components/modal-review-success/modal-review-success';
 
 function Product (): JSX.Element {
   const [tabType, setTabType] = useState<TabType>(TabType.Characteristic);
@@ -27,7 +29,9 @@ function Product (): JSX.Element {
   const camera = useAppSelector(getCurrentProduct);
   const similarCameras = useAppSelector(getSimilarCameras);
   const reviews = useAppSelector(getReviews);
-  const isModalActive = useAppSelector(getAddToCartModalStatus);
+  const isModalBasketActive = useAppSelector(getAddToCartModalStatus);
+  const isReviewModalActive = useAppSelector(getReviewModalStatus);
+  const isReviewSuccessActive = useAppSelector(getReviewSuccessModalStatus);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -177,7 +181,9 @@ function Product (): JSX.Element {
                 <ReviewBlock reviews={reviews}/>}
             </div>
           </div>
-          {isModalActive && <ModalAddCart />}
+          {isModalBasketActive && <ModalAddCart />}
+          {isReviewModalActive && <ModalReview />}
+          {isReviewSuccessActive && <ModalReviewSuccess />}
         </main>
         <a className="up-btn" href="#header">
           <svg width="12" height="18" aria-hidden="true">
