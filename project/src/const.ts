@@ -2,6 +2,7 @@ export const START_PAGE = 1;
 export const CAMERAS_PER_PAGE = 9;
 export const TOTAL_COUNT_HEADER = 'x-total-count';
 export const MODAL_OPEN_CLASS = 'scroll-lock';
+export const MIN_RATING = 1;
 export const MAX_RATING = 5;
 
 export enum AppRoute {

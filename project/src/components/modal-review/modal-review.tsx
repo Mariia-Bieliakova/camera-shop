@@ -30,7 +30,7 @@ function ModalReview (): JSX.Element {
   const { register, formState: {errors}, handleSubmit } = useForm<ReviewPost>();
   const isActive = useAppSelector(getReviewModalStatus);
   const dispatch = useAppDispatch();
-  const {isSuccess} = useAppSelector(selectPostReviewStatus);
+  const {isSuccess, isLoading} = useAppSelector(selectPostReviewStatus);
 
   useEffect(() => {
     if (isSuccess) {
@@ -178,6 +178,7 @@ function ModalReview (): JSX.Element {
             type="button"
             aria-label="Закрыть попап"
             onClick={handleCloseButtonClick}
+            disabled={isLoading}
           >
             <svg width="10" height="10" aria-hidden="true">
               <use xlinkHref="#icon-close" />
