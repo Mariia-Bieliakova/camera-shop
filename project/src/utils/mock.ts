@@ -1,4 +1,4 @@
-import { Review } from '../types/review';
+import { Review, ReviewPost } from '../types/review';
 import {random, name, lorem, date, datatype, commerce, image} from 'faker';
 import { MAX_RATING, MIN_RATING } from '../const';
 import { Camera, Promo } from '../types/camera';
@@ -55,3 +55,12 @@ export const makeFakePromo = (): Promo => ({
   previewImgWebp: image.technics(),
   previewImgWebp2x: image.technics(),
 } as Promo);
+
+export const makeFakeNewReview = (): ReviewPost => ({
+  cameraId: datatype.number(),
+  userName: name.firstName(),
+  advantage: lorem.sentence(),
+  disadvantage: lorem.sentence(),
+  review: lorem.sentences(),
+  rating: getRandomInteger(MIN_RATING, MAX_RATING),
+} as ReviewPost);

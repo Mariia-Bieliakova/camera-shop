@@ -61,6 +61,7 @@ function ModalAddCart (): JSX.Element {
     <div
       className={modalClass}
       onClick={handleCloseButtonClick}
+      data-testid='modal'
     >
       <div className="modal__wrapper">
         <div className="modal__overlay"></div>

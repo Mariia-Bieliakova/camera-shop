@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CAMERAS_PER_PAGE, NameSpace, START_PAGE } from '../../const';
 
-type UI = {
+export type UI = {
   currentPage: number;
   camerasPerPage: number;
   pages: number;

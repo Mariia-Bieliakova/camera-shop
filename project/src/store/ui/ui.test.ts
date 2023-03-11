@@ -1,7 +1,17 @@
 import { CAMERAS_PER_PAGE, START_PAGE } from '../../const';
-import { changePage, setPagesCount, ui } from './ui';
+import { changePage, setPagesCount, UI, ui } from './ui';
 
 describe('Reducer: ui', () => {
+  let state: UI;
+
+  beforeEach(() => {
+    state = {
+      currentPage: START_PAGE,
+      camerasPerPage: CAMERAS_PER_PAGE,
+      pages: 0
+    };
+  });
+
   it('without additional parameters should return initial state', () => {
     expect(ui.reducer(undefined, { type: 'UNKNOWN_ACTION'}))
       .toEqual({
@@ -12,12 +22,6 @@ describe('Reducer: ui', () => {
   });
 
   it('should set current page as given', () => {
-    const state = {
-      currentPage: START_PAGE,
-      camerasPerPage: CAMERAS_PER_PAGE,
-      pages: 0
-    };
-
     const page = 4;
 
     expect(ui.reducer(state, changePage({page})))
@@ -29,12 +33,6 @@ describe('Reducer: ui', () => {
   });
 
   it('should set the count of pages', () => {
-    const state = {
-      currentPage: START_PAGE,
-      camerasPerPage: CAMERAS_PER_PAGE,
-      pages: 0
-    };
-
     const camerasCount = 10;
     const pages = Math.ceil((camerasCount / CAMERAS_PER_PAGE));
 

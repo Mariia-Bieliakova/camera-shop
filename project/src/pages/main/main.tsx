@@ -6,7 +6,7 @@ import ProductCard from '../../components/product-card/product-card';
 import Pagination from '../../components/pagination/pagination';
 import Layout from '../../components/layout/layout';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getCamerasOnPage } from '../../store/cameras/selectors';
+import { getCamerasOnPage, selectCamerasStatus } from '../../store/cameras/selectors';
 import { getCurrentPage } from '../../store/ui/selectors';
 import { useEffect } from 'react';
 import { fetchCamerasPerPage } from '../../store/api-actions';
@@ -18,6 +18,7 @@ function Main (): JSX.Element {
   const currentPage = useAppSelector(getCurrentPage);
   const dispatch = useAppDispatch();
   const camerasOnPage = useAppSelector(getCamerasOnPage);
+  const {isError} = useAppSelector(selectCamerasStatus);
   const isModalActive = useAppSelector(getAddToCartModalStatus);
 
   useEffect(() => {
@@ -26,6 +27,10 @@ function Main (): JSX.Element {
 
     dispatch(fetchCamerasPerPage([startIndex, CAMERAS_PER_PAGE]));
   }, [currentPage, dispatch]);
+
+  if (isError) {
+    return <p>Сервер недоступен. Перезагрузите, пожалуйста, страницу</p>;
+  }
 
   return (
     <div className="wrapper">
