@@ -7,6 +7,7 @@ import { Action } from 'redux';
 import { makeFakeCamera, makeFakeNewReview, makeFakePastReview, makeFakePromo, makeFutureReview } from '../utils/mock';
 import { APIRoute } from '../const';
 import { fetchCamerasPerPage, fetchCurrentCamera, fetchPromoAction, fetchReviews, fetchSimilarCameras, postReview } from './api-actions';
+import { setPagesCount } from './ui/ui';
 
 describe('Async actions:', () => {
   const api = createAPI();
@@ -106,7 +107,10 @@ describe('Async actions:', () => {
 
       mockApi
         .onGet(`${APIRoute.Cameras}?_start=${mockStart}&_limit=${mockLimit}`)
-        .reply(200, mockCameras);
+        .reply(200,
+          mockCameras,
+          {'x-total-count': 40}
+        );
 
       const store = mockStore();
 
@@ -116,6 +120,7 @@ describe('Async actions:', () => {
 
       expect(actions).toEqual([
         fetchCamerasPerPage.pending.type,
+        setPagesCount.type,
         fetchCamerasPerPage.fulfilled.type
       ]);
     });

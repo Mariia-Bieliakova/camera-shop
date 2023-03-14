@@ -3,7 +3,7 @@ import {random, name, lorem, date, datatype, commerce, image} from 'faker';
 import { MAX_RATING, MIN_RATING } from '../const';
 import { Camera, Promo } from '../types/camera';
 
-const getRandomInteger = (min: number, max: number): number => {
+export const getRandomInteger = (min: number, max: number): number => {
   const rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
 };

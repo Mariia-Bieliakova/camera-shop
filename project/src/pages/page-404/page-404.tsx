@@ -21,7 +21,7 @@ function PageNotFound(): JSX.Element {
         <h1 className={styles.error}>
           404 Страница не найдена
         </h1>
-        <Link to={AppRoute.Root} className={styles.back}>
+        <Link to={AppRoute.Root} className={styles.back} data-testid='return'>
           Вернуться на главную страницу
         </Link>
       </section>

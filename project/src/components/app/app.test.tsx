@@ -1,18 +1,30 @@
+import thunk, { ThunkDispatch } from 'redux-thunk';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
+import { Action } from 'redux';
 import { AppRoute, CAMERAS_PER_PAGE, FetchStatus, START_PAGE, NameSpace } from '../../const';
+import { createAPI } from '../../services/api';
 import { makeFakeCamera, makeFakePastReview, makeFakePromo } from '../../utils/mock';
 import HistoryRouter from '../history-router/history-router';
 import App from './app';
+import { State } from '../../types/state';
 
-const mockStore = configureMockStore();
 const fakeCameras = [makeFakeCamera(), makeFakeCamera(), makeFakeCamera()];
 const fakePromo = makeFakePromo();
 const fakeCurrentCamera = makeFakeCamera();
 const fakeSimilarCameras = [makeFakeCamera(), makeFakeCamera(), makeFakeCamera()];
 const fakeReviews = [makeFakePastReview(), makeFakePastReview()];
+
+const api = createAPI();
+const middlewares = [thunk.withExtraArgument(api)];
+
+const mockStore = configureMockStore<
+  State,
+  Action<string>,
+  ThunkDispatch<State, typeof api, Action>
+  >(middlewares);
 
 const store = mockStore({
   [NameSpace.Camera]: {
@@ -43,9 +55,11 @@ const store = mockStore({
   }
 });
 
-jest.mock('nanoid', () => 'some-id');
 jest.mock('../../components/product-card/product-card', () => () => 'Product Card');
 jest.mock('../../components/icon-star/icon-star', () => () => 'Star');
+jest.mock('nanoid', () => ({
+  nanoid: jest.fn().mockImplementation(() => 'some-id'),
+}));
 
 const history = createMemoryHistory();
 
@@ -58,6 +72,8 @@ const fakeApp = (
 );
 
 describe('Application Routing:', () => {
+  beforeEach(window.HTMLHtmlElement.prototype.scrollTo = jest.fn());
+  beforeEach(window.Window.prototype.scrollTo = jest.fn());
 
   it('should render basket when user navigate to "/basket"', () => {
     history.push(AppRoute.Basket);

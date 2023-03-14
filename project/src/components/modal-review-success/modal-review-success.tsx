@@ -38,6 +38,7 @@ function ModalReviewSuccess (): JSX.Element {
     <div
       className={modalClass}
       onClick={handleCloseButtonClick}
+      data-testid='modal'
     >
       <div className="modal__wrapper">
         <div className="modal__overlay"></div>
@@ -51,6 +52,7 @@ function ModalReviewSuccess (): JSX.Element {
               className="btn btn--purple modal__btn modal__btn--fit-width"
               type="button"
               onClick={handleCloseButtonClick}
+              data-testid='return'
             >Вернуться к покупкам
             </button>
           </div>

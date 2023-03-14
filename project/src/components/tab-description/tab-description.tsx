@@ -12,7 +12,7 @@ function TabDescription ({description, tabType}: TabDescriptionProps): JSX.Eleme
   });
 
   return (
-    <div className={className}>
+    <div className={className} data-testid='tab-description'>
       <div className="product__tabs-text">
         <p>{description}</p>
       </div>

@@ -10,6 +10,7 @@ import { ReviewPost } from '../../types/review';
 import { postReview } from '../../store/api-actions';
 import { selectPostReviewStatus } from '../../store/reviews/selectors';
 import { clearPostReviewStatus } from '../../store/reviews/reviews';
+import React from 'react';
 
 const RateFormData = {
   Great: {id: 'star-5', title: 'Отлично', value: 5},
@@ -82,6 +83,7 @@ function ModalReview (): JSX.Element {
     <div
       className={modalClass}
       onClick={handleCloseButtonClick}
+      data-testid='modal'
     >
       <div className="modal__wrapper">
         <div className="modal__overlay"></div>
@@ -103,7 +105,7 @@ function ModalReview (): JSX.Element {
                   <div className="rate__bar">
                     <div className="rate__group">
                       {Object.values(RateFormData).map((rate) => (
-                        <>
+                        <React.Fragment key={rate.id}>
                           <input
                             className="visually-hidden"
                             id={rate.id}
@@ -117,7 +119,7 @@ function ModalReview (): JSX.Element {
                             title={rate.title}
                           >
                           </label>
-                        </>
+                        </React.Fragment>
                       ))}
                     </div>
                     <div className="rate__progress">
@@ -145,6 +147,7 @@ function ModalReview (): JSX.Element {
                           type="text"
                           placeholder={data.placeholder}
                           {...register(data.name, {required: true})}
+                          data-testid={data.name}
                         />
                       </label>
                       {errors[data.name]?.type === 'required' && <p className="custom-input__error">{data.error}</p>}
@@ -159,6 +162,7 @@ function ModalReview (): JSX.Element {
                     </span>
                     <textarea
                       placeholder="Поделитесь своим опытом покупки"
+                      data-testid='review'
                       {...register('review', {required: true, minLength: 5})}
                     >
                     </textarea>

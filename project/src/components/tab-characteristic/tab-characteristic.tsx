@@ -14,7 +14,7 @@ function TabCharacteristic ({camera, tabType}: TabCharacteristicProps): JSX.Elem
   });
 
   return (
-    <div className={className}>
+    <div className={className} data-testid='tab-characteristic'>
       <ul className="product__tabs-list">
         <li className="item-list">
           <span className="item-list__title">Артикул:</span>

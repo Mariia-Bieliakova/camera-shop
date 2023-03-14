@@ -11,7 +11,7 @@ export const fetchCamerasPerPage = createAsyncThunk<Camera[], [number, number], 
   state: State;
   extra: AxiosInstance;
 }>(
-  'data/fetchCamerasPage',
+  'data/fetchCamerasPerPage',
   async ([start, limit], {dispatch, extra: api, rejectWithValue}) => {
     try {
       const {data, headers} = await api.get<Camera[]>(`${APIRoute.Cameras}?_start=${start}&_limit=${limit}`);
