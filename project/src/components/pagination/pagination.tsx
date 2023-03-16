@@ -11,11 +11,7 @@ function Pagination ():JSX.Element {
   const dispatch = useAppDispatch();
   const prevPage = currentPage - 1;
   const nextPage = currentPage + 1;
-  const pages = [];
-
-  for (let i = 1; i <= pagesCount; i++) {
-    pages.push(i);
-  }
+  const pages = [...Array(pagesCount).keys()].map((el) => el + 1);
 
   const handlePageClick = (page: number) => {
     dispatch(changePage({page}));

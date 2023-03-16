@@ -4,7 +4,7 @@ import Logo from '../../components/logo/logo';
 import { AppRoute } from '../../const';
 import styles from './page-404.module.css';
 
-function PageNotFound(): JSX.Element {
+function Page404(): JSX.Element {
   return (
     <>
       <Helmet>
@@ -29,4 +29,4 @@ function PageNotFound(): JSX.Element {
   );
 }
 
-export default PageNotFound;
+export default Page404;
