@@ -13,7 +13,7 @@ function Pagination ():JSX.Element {
   const nextPage = currentPage + 1;
   const pages = [...Array(pagesCount).keys()].map((el) => el + 1);
 
-  const handlePageClick = (page: number) => {
+  const handlePageClick = (page: number) => () => {
     dispatch(changePage({page}));
   };
 
@@ -27,7 +27,7 @@ function Pagination ():JSX.Element {
             <Link
               className="pagination__link pagination__link--text"
               to={`${AppRoute.Root}${generatePath(AppRoute.Catalog, {page: String(prevPage)})}`}
-              onClick={() => handlePageClick(prevPage)}
+              onClick={handlePageClick(prevPage)}
             >Назад
             </Link>
           </li>}
@@ -42,7 +42,7 @@ function Pagination ():JSX.Element {
               <Link
                 className={className}
                 to={`${AppRoute.Root}${generatePath(AppRoute.Catalog, {page: String(page)})}`}
-                onClick={() => handlePageClick(page)}
+                onClick={handlePageClick(page)}
               > {page}
               </Link>
             </li>
@@ -53,7 +53,7 @@ function Pagination ():JSX.Element {
             <Link
               className="pagination__link pagination__link--text"
               to={`${AppRoute.Root}${generatePath(AppRoute.Catalog, {page: String(nextPage)})}`}
-              onClick={() => handlePageClick(nextPage)}
+              onClick={handlePageClick(nextPage)}
             >Далее
             </Link>
           </li>}
