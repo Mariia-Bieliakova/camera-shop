@@ -12,7 +12,7 @@ export const getPostReviewStatus = (state: State): FetchStatus => state[NameSpac
 export const selectPostReviewStatus = createSelector(
   [getPostReviewStatus],
   (status) => ({
-    isLoading: [FetchStatus.Idle, FetchStatus.Pending].includes(status),
+    isLoading: status === FetchStatus.Pending,
     isSuccess: status === FetchStatus.Success,
     isError: status === FetchStatus.Error
   })

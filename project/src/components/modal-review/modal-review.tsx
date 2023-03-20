@@ -11,6 +11,7 @@ import { postReview } from '../../store/api-actions';
 import { selectPostReviewStatus } from '../../store/reviews/selectors';
 import { clearPostReviewStatus } from '../../store/reviews/reviews';
 import React from 'react';
+import FocusTrap from 'focus-trap-react';
 
 const RateFormData = {
   Great: {id: 'star-5', title: 'Отлично', value: 5},
@@ -80,117 +81,120 @@ function ModalReview (): JSX.Element {
   };
 
   return (
-    <div
-      className={modalClass}
-      onClick={handleCloseButtonClick}
-      data-testid='modal'
-    >
-      <div className="modal__wrapper">
-        <div className="modal__overlay"></div>
-        <div className="modal__content" onClick={(e) => e.stopPropagation()}>
-          <p className="title title--h4">Оставить отзыв</p>
-          <div className="form-review">
-            <form
-              method="post"
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className="form-review__rate">
-                <fieldset className="rate form-review__item">
-                  <legend className="rate__caption">Рейтинг
-                    <svg width="9" height="9" aria-hidden="true">
-                      <use xlinkHref="#icon-snowflake" />
-                    </svg>
-                  </legend>
-                  <div className="rate__bar">
-                    <div className="rate__group">
-                      {Object.values(RateFormData).map((rate) => (
-                        <React.Fragment key={rate.id}>
-                          <input
-                            className="visually-hidden"
-                            id={rate.id}
-                            type="radio"
-                            value={rate.value}
-                            {...register('rating', {required: true})}
-                          />
-                          <label
-                            className="rate__label"
-                            htmlFor={rate.id}
-                            title={rate.title}
-                          >
-                          </label>
-                        </React.Fragment>
-                      ))}
-                    </div>
-                    <div className="rate__progress">
-                      <span className="rate__stars">0</span>
-                      <span>/</span>
-                      <span className="rate__all-stars">5</span>
-                    </div>
-                  </div>
-                  {errors.rating?.type === 'required' && <p className="rate__message">Нужно оценить товар</p>}
-                </fieldset>
-                {Object.values(FormData).map((data) => {
-                  const className = cn('custom-input form-review__item', {
-                    'is-invalid': errors[data.name]
-                  });
-
-                  return (
-                    <div className={className} key={data.name}>
-                      <label>
-                        <span className="custom-input__label">{data.label}
-                          <svg width="9" height="9" aria-hidden="true">
-                            <use xlinkHref="#icon-snowflake" />
-                          </svg>
-                        </span>
-                        <input
-                          type="text"
-                          placeholder={data.placeholder}
-                          {...register(data.name, {required: true})}
-                          data-testid={data.name}
-                        />
-                      </label>
-                      {errors[data.name]?.type === 'required' && <p className="custom-input__error">{data.error}</p>}
-                    </div>
-                  );})}
-                <div className={textareaClassName}>
-                  <label>
-                    <span className="custom-textarea__label">Комментарий
+    <FocusTrap>
+      <div
+        className={modalClass}
+        onClick={handleCloseButtonClick}
+        data-testid='modal'
+      >
+        <div className="modal__wrapper">
+          <div className="modal__overlay"></div>
+          <div className="modal__content" onClick={(e) => e.stopPropagation()}>
+            <p className="title title--h4">Оставить отзыв</p>
+            <div className="form-review">
+              <form
+                method="post"
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <div className="form-review__rate">
+                  <fieldset className="rate form-review__item">
+                    <legend className="rate__caption">Рейтинг
                       <svg width="9" height="9" aria-hidden="true">
                         <use xlinkHref="#icon-snowflake" />
                       </svg>
-                    </span>
-                    <textarea
-                      placeholder="Поделитесь своим опытом покупки"
-                      data-testid='review'
-                      {...register('review', {required: true, minLength: 5})}
-                    >
-                    </textarea>
-                  </label>
-                  {errors.review && <div className="custom-textarea__error">Нужно добавить комментарий</div>}
+                    </legend>
+                    <div className="rate__bar">
+                      <div className="rate__group">
+                        {Object.values(RateFormData).map((rate) => (
+                          <React.Fragment key={rate.id}>
+                            <input
+                              className="visually-hidden"
+                              id={rate.id}
+                              type="radio"
+                              value={rate.value}
+                              tabIndex={0}
+                              {...register('rating', {required: true})}
+                            />
+                            <label
+                              className="rate__label"
+                              htmlFor={rate.id}
+                              title={rate.title}
+                            >
+                            </label>
+                          </React.Fragment>
+                        ))}
+                      </div>
+                      <div className="rate__progress">
+                        <span className="rate__stars">0</span>
+                        <span>/</span>
+                        <span className="rate__all-stars">5</span>
+                      </div>
+                    </div>
+                    {errors.rating?.type === 'required' && <p className="rate__message">Нужно оценить товар</p>}
+                  </fieldset>
+                  {Object.values(FormData).map((data) => {
+                    const className = cn('custom-input form-review__item', {
+                      'is-invalid': errors[data.name]
+                    });
+
+                    return (
+                      <div className={className} key={data.name}>
+                        <label>
+                          <span className="custom-input__label">{data.label}
+                            <svg width="9" height="9" aria-hidden="true">
+                              <use xlinkHref="#icon-snowflake" />
+                            </svg>
+                          </span>
+                          <input
+                            type="text"
+                            placeholder={data.placeholder}
+                            {...register(data.name, {required: true})}
+                            data-testid={data.name}
+                          />
+                        </label>
+                        {errors[data.name]?.type === 'required' && <p className="custom-input__error">{data.error}</p>}
+                      </div>
+                    );})}
+                  <div className={textareaClassName}>
+                    <label>
+                      <span className="custom-textarea__label">Комментарий
+                        <svg width="9" height="9" aria-hidden="true">
+                          <use xlinkHref="#icon-snowflake" />
+                        </svg>
+                      </span>
+                      <textarea
+                        placeholder="Поделитесь своим опытом покупки"
+                        data-testid='review'
+                        {...register('review', {required: true, minLength: 5})}
+                      >
+                      </textarea>
+                    </label>
+                    {errors.review && <div className="custom-textarea__error">Нужно добавить комментарий</div>}
+                  </div>
                 </div>
-              </div>
-              <button
-                className="btn btn--purple form-review__btn"
-                type="submit"
-              >Отправить отзыв
-              </button>
-            </form>
+                <button
+                  className="btn btn--purple form-review__btn"
+                  type="submit"
+                >Отправить отзыв
+                </button>
+              </form>
+            </div>
+            <button
+              className="cross-btn"
+              type="button"
+              aria-label="Закрыть попап"
+              onClick={handleCloseButtonClick}
+              disabled={isLoading}
+            >
+              <svg width="10" height="10" aria-hidden="true">
+                <use xlinkHref="#icon-close" />
+              </svg>
+            </button>
           </div>
-          <button
-            className="cross-btn"
-            type="button"
-            aria-label="Закрыть попап"
-            onClick={handleCloseButtonClick}
-            disabled={isLoading}
-          >
-            <svg width="10" height="10" aria-hidden="true">
-              <use xlinkHref="#icon-close" />
-            </svg>
-          </button>
         </div>
       </div>
-    </div>
+    </FocusTrap>
   );
 }
 

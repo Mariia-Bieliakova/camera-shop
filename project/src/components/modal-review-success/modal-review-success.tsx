@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { closeReviewSuccessModal } from '../../store/modals/modals';
 import { getReviewSuccessModalStatus } from '../../store/modals/selectors';
 import cn from 'classnames';
+import FocusTrap from 'focus-trap-react';
 
 function ModalReviewSuccess (): JSX.Element {
   const isActive = useAppSelector(getReviewSuccessModalStatus);
@@ -35,40 +36,43 @@ function ModalReviewSuccess (): JSX.Element {
   };
 
   return (
-    <div
-      className={modalClass}
-      onClick={handleCloseButtonClick}
-      data-testid='modal'
-    >
-      <div className="modal__wrapper">
-        <div className="modal__overlay"></div>
-        <div className="modal__content" onClick={(e) => e.stopPropagation()}>
-          <p className="title title--h4">Спасибо за отзыв</p>
-          <svg className="modal__icon" width="80" height="78" aria-hidden="true">
-            <use xlinkHref="#icon-review-success" />
-          </svg>
-          <div className="modal__buttons">
+    <FocusTrap>
+      <div
+        className={modalClass}
+        onClick={handleCloseButtonClick}
+        data-testid='modal'
+      >
+        <div className="modal__wrapper">
+          <div className="modal__overlay"></div>
+          <div className="modal__content" onClick={(e) => e.stopPropagation()}>
+            <p className="title title--h4">Спасибо за отзыв</p>
+            <svg className="modal__icon" width="80" height="78" aria-hidden="true">
+              <use xlinkHref="#icon-review-success" />
+            </svg>
+            <div className="modal__buttons">
+              <button
+                className="btn btn--purple modal__btn modal__btn--fit-width"
+                type="button"
+                onClick={handleCloseButtonClick}
+                data-testid='return'
+                tabIndex={0}
+              >Вернуться к покупкам
+              </button>
+            </div>
             <button
-              className="btn btn--purple modal__btn modal__btn--fit-width"
+              className="cross-btn"
               type="button"
+              aria-label="Закрыть попап"
               onClick={handleCloseButtonClick}
-              data-testid='return'
-            >Вернуться к покупкам
+            >
+              <svg width="10" height="10" aria-hidden="true">
+                <use xlinkHref="#icon-close" />
+              </svg>
             </button>
           </div>
-          <button
-            className="cross-btn"
-            type="button"
-            aria-label="Закрыть попап"
-            onClick={handleCloseButtonClick}
-          >
-            <svg width="10" height="10" aria-hidden="true">
-              <use xlinkHref="#icon-close" />
-            </svg>
-          </button>
         </div>
       </div>
-    </div>
+    </FocusTrap>
   );
 }
 
