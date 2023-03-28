@@ -1,17 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { FetchStatus, NameSpace } from '../../const';
 import { Camera, Promo } from '../../types/camera';
-import { fetchCamerasPerPage, fetchCurrentCamera, fetchPromoAction, fetchSimilarCameras } from '../api-actions';
+import { fetchCamerasPerPage, fetchCurrentCamera, fetchPromoAction, fetchSearchCameras, fetchSimilarCameras } from '../api-actions';
 
 type Cameras = {
   promo: Promo | null;
   camerasOnPage: Camera[];
   currentCamera: Camera | null;
   similarCameras: Camera[];
+  searchCameras: Camera[] | undefined;
   fetchCamerasStatus: FetchStatus;
   fetchPromoStatus: FetchStatus;
   fetchCurrentCameraStatus: FetchStatus;
   fetchSimilarCamerasStatus: FetchStatus;
+  fetchSearchCamerasStatus: FetchStatus;
 }
 
 const initialState: Cameras = {
@@ -19,16 +21,22 @@ const initialState: Cameras = {
   promo: null,
   currentCamera: null,
   similarCameras: [],
+  searchCameras: [],
   fetchCamerasStatus: FetchStatus.Idle,
   fetchPromoStatus: FetchStatus.Idle,
   fetchCurrentCameraStatus: FetchStatus.Idle,
-  fetchSimilarCamerasStatus: FetchStatus.Idle
+  fetchSimilarCamerasStatus: FetchStatus.Idle,
+  fetchSearchCamerasStatus: FetchStatus.Idle
 };
 
 export const cameras = createSlice({
   name: NameSpace.Camera,
   initialState,
-  reducers: {},
+  reducers: {
+    clearSearchCameras: (state) => {
+      state.searchCameras = [];
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchPromoAction.pending, (state) => {
@@ -70,6 +78,20 @@ export const cameras = createSlice({
       })
       .addCase(fetchSimilarCameras.rejected, (state) => {
         state.fetchSimilarCamerasStatus = FetchStatus.Error;
+      })
+      .addCase(fetchSearchCameras.fulfilled, (state, action) => {
+        state.searchCameras = action.payload;
+        state.fetchSearchCamerasStatus = FetchStatus.Success;
+      })
+      .addCase(fetchSearchCameras.pending, (state) => {
+        state.fetchSearchCamerasStatus = FetchStatus.Pending;
+        state.searchCameras = [];
+      })
+      .addCase(fetchSearchCameras.rejected, (state) => {
+        state.fetchSearchCamerasStatus = FetchStatus.Error;
+        state.searchCameras = undefined;
       });
   },
 });
+
+export const {clearSearchCameras} = cameras.actions;

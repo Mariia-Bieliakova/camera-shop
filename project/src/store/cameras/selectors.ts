@@ -19,6 +19,10 @@ export const getSimilarCameras = (state: State): Camera[] => state[NameSpace.Cam
 
 export const getSimilarCamerasFetchStatus = (state: State): FetchStatus => state[NameSpace.Camera].fetchSimilarCamerasStatus;
 
+export const getSearchCameras = (state: State): Camera[] | undefined => state[NameSpace.Camera].searchCameras;
+
+export const getSearchCamerasFetchStatus = (state: State): FetchStatus => state[NameSpace.Camera].fetchSearchCamerasStatus;
+
 export const selectCamerasStatus = createSelector(
   [getCamerasFetchStatus],
   (status) => ({
@@ -50,6 +54,16 @@ export const selectSimilarCamerasStatus = createSelector(
   [getSimilarCamerasFetchStatus],
   (status) => ({
     isLoading: [FetchStatus.Idle, FetchStatus.Pending].includes(status),
+    isSuccess: status === FetchStatus.Success,
+    isError: status === FetchStatus.Error
+  })
+);
+
+export const selectSearchCamerasStatus = createSelector(
+  [getSearchCamerasFetchStatus],
+  (status) => ({
+    isEmpty: status === FetchStatus.Idle,
+    isLoading: status === FetchStatus.Pending,
     isSuccess: status === FetchStatus.Success,
     isError: status === FetchStatus.Error
   })
