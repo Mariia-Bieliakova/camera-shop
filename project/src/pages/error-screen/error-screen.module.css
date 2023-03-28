@@ -1,0 +1,29 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: white;
+
+}
+
+.replay{
+  padding: 9px 21px 6px 11px;
+  display: block;
+  font-size: 19px;
+  line-height: 1.211;
+  border-radius: 5px;
+  background-color: #7575e2;
+  text-shadow: 0.5px 0 0, 0.5px 0 0, -0.5px 0 0;
+  color: white;
+  border: none;
+}
+
+.btnText{
+  display: block;
+}
+
+.errorText{
+  font-size: large;
+}

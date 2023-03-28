@@ -36,7 +36,14 @@ function ModalReviewSuccess (): JSX.Element {
   };
 
   return (
-    <FocusTrap>
+    <FocusTrap
+      active={isActive}
+      focusTrapOptions={{
+        tabbableOptions: {
+          displayCheck: 'none'
+        }
+      }}
+    >
       <div
         className={modalClass}
         onClick={handleCloseButtonClick}

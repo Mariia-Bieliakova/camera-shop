@@ -13,12 +13,14 @@ import { fetchCamerasPerPage } from '../../store/api-actions';
 import { CAMERAS_PER_PAGE } from '../../const';
 import ModalAddCart from '../../components/modal-add-cart/modal-add-cart';
 import { getAddToCartModalStatus } from '../../store/modals/selectors';
+import FullpageSpinner from '../../components/fullpage-spinner/fullpage-spinner';
+import ErrorScreen from '../error-screen/error-screen';
 
 function Main (): JSX.Element {
   const currentPage = useAppSelector(getCurrentPage);
   const dispatch = useAppDispatch();
   const camerasOnPage = useAppSelector(getCamerasOnPage);
-  const {isError} = useAppSelector(selectCamerasStatus);
+  const {isError, isLoading} = useAppSelector(selectCamerasStatus);
   const isModalActive = useAppSelector(getAddToCartModalStatus);
 
   useEffect(() => {
@@ -28,8 +30,12 @@ function Main (): JSX.Element {
     dispatch(fetchCamerasPerPage([startIndex, CAMERAS_PER_PAGE]));
   }, [currentPage, dispatch]);
 
+  if (isLoading) {
+    return <FullpageSpinner size='big'/>;
+  }
+
   if (isError) {
-    return <p>Сервер недоступен. Перезагрузите, пожалуйста, страницу</p>;
+    return <ErrorScreen />;
   }
 
   return (

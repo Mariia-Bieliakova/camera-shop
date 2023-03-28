@@ -114,7 +114,7 @@ describe('Main page:', () => {
       </Provider>
     );
 
-    expect(screen.getByText('Сервер недоступен. Перезагрузите, пожалуйста, страницу')).toBeInTheDocument();
+    expect(screen.getByText('Что-то пошло не так:( Попробуйте обновить страницу')).toBeInTheDocument();
     expect(screen.queryByText('Каталог фото- и видеотехники')).not.toBeInTheDocument();
   });
 });

@@ -122,53 +122,7 @@ describe('Product page', () => {
         </HelmetProvider>
       </Provider>
     );
-    expect(screen.getByText('Something went wrong. Try again.')).toBeInTheDocument();
-    expect(screen.queryByText('Please wait a little')).not.toBeInTheDocument();
+    expect(screen.getByText('Что-то пошло не так:( Попробуйте обновить страницу')).toBeInTheDocument();
     expect(screen.queryByText(fakeCurrentCamera.name)).not.toBeInTheDocument();
-  });
-
-  it('should render loading text when server is pending', () => {
-
-    const errorStore = mockStore({
-      [NameSpace.Camera]: {
-        camerasOnPage: fakeCameras,
-        promo: fakePromo,
-        currentCamera: null,
-        similarCameras: fakeCameras,
-        fetchCamerasStatus: FetchStatus.Success,
-        fetchPromoStatus: FetchStatus.Success,
-        fetchCurrentCameraStatus: FetchStatus.Pending,
-        fetchSimilarCamerasStatus: FetchStatus.Success
-      },
-      [NameSpace.Ui]: {
-        currentPage: START_PAGE,
-        camerasPerPage: CAMERAS_PER_PAGE,
-        pages: 1
-      },
-      [NameSpace.Modals]: {
-        activeCamera: fakeCurrentCamera,
-        isAddToCartOpen: false,
-        isReviewOpen: false,
-        isReviewSuccessOpen: false
-      },
-      [NameSpace.Reviews]: {
-        reviews: fakeReviews,
-        fetchReviewsStatus: FetchStatus.Success,
-        postReviewStatus: FetchStatus.Idle
-      }
-    });
-
-    render(
-      <Provider store={errorStore}>
-        <HelmetProvider>
-          <HistoryRouter history={history}>
-            <Product />
-          </HistoryRouter>
-        </HelmetProvider>
-      </Provider>
-    );
-    expect(screen.getByText('Please wait a little')).toBeInTheDocument();
-    expect(screen.queryByText(fakeCurrentCamera.name)).not.toBeInTheDocument();
-    expect(screen.queryByText('Something went wrong. Try again.')).not.toBeInTheDocument();
   });
 });

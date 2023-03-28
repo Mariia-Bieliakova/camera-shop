@@ -19,6 +19,8 @@ import cn from 'classnames';
 import { getReviews } from '../../store/reviews/selectors';
 import ModalReview from '../../components/modal-review/modal-review';
 import ModalReviewSuccess from '../../components/modal-review-success/modal-review-success';
+import FullpageSpinner from '../../components/fullpage-spinner/fullpage-spinner';
+import ErrorScreen from '../error-screen/error-screen';
 
 function Product (): JSX.Element {
   const [tabType, setTabType] = useState<TabType>(TabType.Characteristic);
@@ -44,11 +46,11 @@ function Product (): JSX.Element {
   }, [id, dispatch]);
 
   if (isLoading) {
-    return <p>Please wait a little</p>;
+    return <FullpageSpinner size='big' />;
   }
 
   if (isError || !camera) {
-    return <p>Something went wrong. Try again.</p>;
+    return <ErrorScreen />;
   }
 
   const {
