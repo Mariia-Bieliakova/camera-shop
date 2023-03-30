@@ -62,8 +62,7 @@ export const selectSimilarCamerasStatus = createSelector(
 export const selectSearchCamerasStatus = createSelector(
   [getSearchCamerasFetchStatus],
   (status) => ({
-    isEmpty: status === FetchStatus.Idle,
-    isLoading: status === FetchStatus.Pending,
+    isLoading: [FetchStatus.Idle, FetchStatus.Pending].includes(status),
     isSuccess: status === FetchStatus.Success,
     isError: status === FetchStatus.Error
   })

@@ -1,13 +1,17 @@
 import { ChangeEvent, useEffect, useState } from 'react';
+import { generatePath, Link } from 'react-router-dom';
+import { AppRoute } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchSearchCameras } from '../../store/api-actions';
 import { clearSearchCameras } from '../../store/cameras/cameras';
-import { getSearchCameras } from '../../store/cameras/selectors';
+import { getSearchCameras, selectSearchCamerasStatus } from '../../store/cameras/selectors';
+import Spinner from '../spinner/spinner';
 
 function SearchForm (): JSX.Element {
   const [searchPhrase, setSearchPhrase] = useState('');
   const dispatch = useAppDispatch();
   const searchCamerasList = useAppSelector(getSearchCameras);
+  const {isLoading} = useAppSelector(selectSearchCamerasStatus);
 
   useEffect(() => {
     searchPhrase.length > 0 ?
@@ -23,6 +27,23 @@ function SearchForm (): JSX.Element {
     setSearchPhrase('');
   };
 
+  const serverAnswer = () => {
+    if (!isLoading && searchCamerasList?.length === 0) {
+      return (
+        <li
+          className="form-search__select-item"
+          tabIndex={0}
+        >
+        Ничего не найдено
+        </li>);
+    }
+
+    return (
+      <li style={{display: 'flex', justifyContent: 'center'}}>
+        <Spinner size='small' color='purple' />
+      </li>);
+  };
+
   return (
     <>
       <form>
@@ -31,6 +52,7 @@ function SearchForm (): JSX.Element {
             <use xlinkHref="#icon-lens" />
           </svg>
           <input
+            data-testid='search-input'
             className="form-search__input"
             type="text"
             autoComplete="off"
@@ -47,16 +69,14 @@ function SearchForm (): JSX.Element {
         >
           {searchCamerasList && searchCamerasList.length > 0 ?
             searchCamerasList.map((camera) => (
-              <li
-                className="form-search__select-item"
-                tabIndex={0}
-                key={camera.id}
-              > {camera.name}
-              </li>)) :
-            <li className="form-search__select-item"
-              tabIndex={0}
-            >Ничего не удалось найти
-            </li>}
+              <Link to={`${AppRoute.Root}${generatePath(AppRoute.Product, {id: String(camera.id)})}`} key={camera.id}>
+                <li
+                  className="form-search__select-item"
+                  tabIndex={0}
+                > {camera.name}
+                </li>
+              </Link>)) :
+            serverAnswer()}
         </ul>
       </form>
       <button
