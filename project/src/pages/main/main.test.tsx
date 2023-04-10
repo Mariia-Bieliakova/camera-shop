@@ -39,7 +39,10 @@ const store = mockStore({
   [NameSpace.Ui]: {
     currentPage: START_PAGE,
     camerasPerPage: CAMERAS_PER_PAGE,
-    pages: 1
+    pages: 1,
+    cameraLevels: [],
+    cameraTypes: [],
+    categories: []
   },
   [NameSpace.Modals]: {
     activeCamera: fakeCurrentCamera,
@@ -94,7 +97,10 @@ describe('Main page:', () => {
       [NameSpace.Ui]: {
         currentPage: START_PAGE,
         camerasPerPage: CAMERAS_PER_PAGE,
-        pages: 1
+        pages: 1,
+        cameraLevels: [],
+        cameraTypes: [],
+        categories: []
       },
       [NameSpace.Modals]: {
         activeCamera: fakeCurrentCamera,

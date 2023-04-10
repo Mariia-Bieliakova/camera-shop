@@ -2,19 +2,19 @@ import Banner from '../../components/banner/banner';
 import Breadcrumbs from '../../components/breadcrumbs/breadcrumbs';
 import FilterForm from '../../components/filter-form/filter-form';
 import SortingForm from '../../components/sorting-form/sorting-form';
-import ProductCard from '../../components/product-card/product-card';
 import Pagination from '../../components/pagination/pagination';
 import Layout from '../../components/layout/layout';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getCamerasOnPage, selectCamerasStatus } from '../../store/cameras/selectors';
-import { getCurrentPage } from '../../store/ui/selectors';
+import { getCameraLevels, getCameraTypes, getCategories, getCurrentPage, getFromPrice, getOrderType, getSortType, getToPrice } from '../../store/ui/selectors';
 import { useEffect } from 'react';
 import { fetchCamerasPerPage } from '../../store/api-actions';
-import { CAMERAS_PER_PAGE } from '../../const';
+import { CamerasParams, CAMERAS_PER_PAGE } from '../../const';
 import ModalAddCart from '../../components/modal-add-cart/modal-add-cart';
 import { getAddToCartModalStatus } from '../../store/modals/selectors';
 import FullpageSpinner from '../../components/fullpage-spinner/fullpage-spinner';
 import ErrorScreen from '../error-screen/error-screen';
+import CardsList from '../../components/cards-list/cards-list';
 
 function Main (): JSX.Element {
   const currentPage = useAppSelector(getCurrentPage);
@@ -22,13 +22,68 @@ function Main (): JSX.Element {
   const camerasOnPage = useAppSelector(getCamerasOnPage);
   const {isError, isLoading} = useAppSelector(selectCamerasStatus);
   const isModalActive = useAppSelector(getAddToCartModalStatus);
+  const sortType = useAppSelector(getSortType);
+  const orderType = useAppSelector(getOrderType);
+  const categoryFilters = useAppSelector(getCategories);
+  const levelFilters = useAppSelector(getCameraLevels);
+  const typeFilters = useAppSelector(getCameraTypes);
+  const fromPrice = useAppSelector(getFromPrice);
+  const toPrice = useAppSelector(getToPrice);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const startIndex = (currentPage - 1) * CAMERAS_PER_PAGE;
 
-    dispatch(fetchCamerasPerPage([startIndex, CAMERAS_PER_PAGE]));
-  }, [currentPage, dispatch]);
+    let params: CamerasParams = {
+      start: startIndex,
+      limit: CAMERAS_PER_PAGE
+    };
+
+    if (sortType || orderType ) {
+      params = {
+        ...params,
+        sort: sortType,
+        order: orderType
+      };
+    }
+
+    if (categoryFilters.length > 0) {
+      params = {
+        ...params,
+        categories: categoryFilters
+      };
+    }
+
+    if (levelFilters.length > 0) {
+      params = {
+        ...params,
+        levels: levelFilters
+      };
+    }
+
+    if (typeFilters.length > 0) {
+      params = {
+        ...params,
+        types: typeFilters
+      };
+    }
+
+    if (fromPrice) {
+      params = {
+        ...params,
+        fromPrice
+      };
+    }
+
+    if (toPrice) {
+      params = {
+        ...params,
+        toPrice
+      };
+    }
+
+    dispatch(fetchCamerasPerPage(params));
+  }, [sortType, orderType, currentPage, dispatch, categoryFilters, levelFilters, typeFilters, fromPrice, toPrice]);
 
   if (isLoading) {
     return <FullpageSpinner size='big'/>;
@@ -58,14 +113,7 @@ function Main (): JSX.Element {
                     <div className="catalog-sort">
                       <SortingForm />
                     </div>
-                    <div className="cards catalog__cards">
-                      {camerasOnPage.map((camera) => (
-                        <ProductCard
-                          camera={camera}
-                          key={camera.id}
-                        />
-                      ))}
-                    </div>
+                    <CardsList cameras={camerasOnPage} />
                     <Pagination />
                   </div>
                 </div>

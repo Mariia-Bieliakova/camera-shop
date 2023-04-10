@@ -4,11 +4,16 @@ import { Provider } from 'react-redux';
 import browserHistory from './browser-history';
 import App from './components/app/app';
 import HistoryRouter from './components/history-router/history-router';
-import { CAMERAS_PER_PAGE } from './const';
+import { CamerasParams, CAMERAS_PER_PAGE } from './const';
 import { store } from './store';
-import { fetchCamerasPerPage, fetchPromoAction } from './store/api-actions';
+import { fetchCameras, fetchCamerasPerPage, fetchPromoAction } from './store/api-actions';
 
-store.dispatch(fetchCamerasPerPage([0, CAMERAS_PER_PAGE]));
+const camerasParams: CamerasParams = {
+  start: 0,
+  limit: CAMERAS_PER_PAGE
+};
+store.dispatch(fetchCamerasPerPage(camerasParams));
+store.dispatch(fetchCameras());
 store.dispatch(fetchPromoAction());
 
 const root = ReactDOM.createRoot(

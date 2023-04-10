@@ -1,20 +1,35 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
-import { APIRoute, TOTAL_COUNT_HEADER } from '../const';
+import { APIRoute, CamerasParams, TOTAL_COUNT_HEADER } from '../const';
 import { Camera, Promo } from '../types/camera';
 import { Review, ReviewPost } from '../types/review';
 import { AppDispatch, State } from '../types/state';
-import { setPagesCount } from './ui/ui';
+import { setMinAndMaxPrice, setPagesCount } from './ui/ui';
 
-export const fetchCamerasPerPage = createAsyncThunk<Camera[], [number, number], {
+export const fetchCamerasPerPage = createAsyncThunk<Camera[], CamerasParams, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
   'data/fetchCamerasPerPage',
-  async ([start, limit], {dispatch, extra: api, rejectWithValue}) => {
+  async ({start, limit, sort, order, categories, types, levels, fromPrice, toPrice}, {dispatch, extra: api, rejectWithValue}) => {
     try {
-      const {data, headers} = await api.get<Camera[]>(`${APIRoute.Cameras}?_start=${start}&_limit=${limit}`);
+      const sortOptions = sort ? `&_sort=${sort}` : '';
+      const orderOptions = order ? `&_order=${order}` : '';
+      const categoryOptions = categories ?
+        categories.map((category) => `&category=${category}`).join('')
+        : '';
+      const typeOptions = types ?
+        types.map((type) => `&type=${type}`).join('')
+        : '';
+      const levelOptions = levels ?
+        levels.map((level) => `&level=${level}`).join('')
+        : '';
+      const fromPriceOptions = fromPrice ? `&price_gte=${fromPrice}` : '';
+      const toPriceOptions = toPrice ? `&price_lte=${toPrice}` : '';
+
+      const {data, headers} = await api.get<Camera[]>(`${APIRoute.Cameras}?_start=${start}&_limit=${limit}${sortOptions}${orderOptions}${categoryOptions}${typeOptions}${levelOptions}${fromPriceOptions}${toPriceOptions}`);
+
       const camerasCount = Number(headers[TOTAL_COUNT_HEADER]);
 
       dispatch(setPagesCount({camerasCount}));
@@ -23,6 +38,19 @@ export const fetchCamerasPerPage = createAsyncThunk<Camera[], [number, number], 
     } catch(err) {
       return rejectWithValue(err);
     }
+  }
+);
+
+export const fetchCameras = createAsyncThunk<void, undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'data/fetchCameras',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api.get<Camera[]>(APIRoute.Cameras);
+
+    dispatch(setMinAndMaxPrice({cameras: data}));
   }
 );
 
@@ -127,3 +155,4 @@ export const fetchSearchCameras = createAsyncThunk<Camera[] | undefined, string,
     }
   }
 );
+

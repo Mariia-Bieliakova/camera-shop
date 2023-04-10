@@ -5,7 +5,7 @@ import thunk, { ThunkDispatch } from 'redux-thunk';
 import { State } from '../types/state';
 import { Action } from 'redux';
 import { makeFakeCamera, makeFakeNewReview, makeFakePastReview, makeFakePromo, makeFutureReview } from '../utils/mock';
-import { APIRoute } from '../const';
+import { APIRoute, CameraLevel, CameraType, Category, OrderData, SortData } from '../const';
 import { fetchCamerasPerPage, fetchCurrentCamera, fetchPromoAction, fetchReviews, fetchSimilarCameras, postReview } from './api-actions';
 import { setPagesCount } from './ui/ui';
 
@@ -114,7 +114,68 @@ describe('Async actions:', () => {
 
       const store = mockStore();
 
-      await store.dispatch(fetchCamerasPerPage([mockStart, mockLimit]));
+      await store.dispatch(fetchCamerasPerPage({start: mockStart, limit: mockLimit}));
+
+      const actions = store.getActions().map(({type}) => type);
+
+      expect(actions).toEqual([
+        fetchCamerasPerPage.pending.type,
+        setPagesCount.type,
+        fetchCamerasPerPage.fulfilled.type
+      ]);
+    });
+
+  it('should dispatch LOAD_CAMERAS_PER_PAGE when GET /cameras?_start=start&_limit=limit&_sort=sortOptions&_order=orderOptions',
+    async () => {
+      const mockCameras = [makeFakeCamera(), makeFakeCamera(), makeFakeCamera()];
+      const mockStart = 0;
+      const mockLimit = 3;
+      const mockSortOptions = SortData.Price;
+      const mockOrderOptions = OrderData.Ascending;
+
+      mockApi
+        .onGet(`${APIRoute.Cameras}?_start=${mockStart}&_limit=${mockLimit}&_sort=${mockSortOptions}&_order=${mockOrderOptions}`)
+        .reply(200,
+          mockCameras,
+          {'x-total-count': 40}
+        );
+
+      const store = mockStore();
+
+      await store.dispatch(fetchCamerasPerPage({start: mockStart, limit: mockLimit, sort: mockSortOptions, order: mockOrderOptions}));
+
+      const actions = store.getActions().map(({type}) => type);
+
+      expect(actions).toEqual([
+        fetchCamerasPerPage.pending.type,
+        setPagesCount.type,
+        fetchCamerasPerPage.fulfilled.type
+      ]);
+    });
+
+  it('should dispatch LOAD_CAMERAS_PER_PAGE when start, limit, sort, order,type, level, category, min and max price',
+    async () => {
+      const mockCameras = [makeFakeCamera(), makeFakeCamera(), makeFakeCamera()];
+      const mockStart = 0;
+      const mockLimit = 3;
+      const mockSortOptions = SortData.Price;
+      const mockOrderOptions = OrderData.Ascending;
+      const mockTypeOptions = CameraType.Collection;
+      const mockLevelOptions = CameraLevel.NonProfessional;
+      const mockCategoryOptions = Category.Photocamera;
+      const mockMinPrice = 200;
+      const mockMaxPrice = 100000;
+
+      mockApi
+        .onGet(`${APIRoute.Cameras}?_start=${mockStart}&_limit=${mockLimit}&_sort=${mockSortOptions}&_order=${mockOrderOptions}&category=${mockCategoryOptions}&type=${mockTypeOptions}&level=${mockLevelOptions}&price_gte=${mockMinPrice}&price_lte=${mockMaxPrice}`)
+        .reply(200,
+          mockCameras,
+          {'x-total-count': 40}
+        );
+
+      const store = mockStore();
+
+      await store.dispatch(fetchCamerasPerPage({start: mockStart, limit: mockLimit, sort: mockSortOptions, order: mockOrderOptions, categories: [mockCategoryOptions], types: [mockTypeOptions], levels: [mockLevelOptions], fromPrice: mockMinPrice, toPrice: mockMaxPrice}));
 
       const actions = store.getActions().map(({type}) => type);
 

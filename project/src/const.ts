@@ -4,6 +4,7 @@ export const TOTAL_COUNT_HEADER = 'x-total-count';
 export const MODAL_OPEN_CLASS = 'scroll-lock';
 export const MIN_RATING = 1;
 export const MAX_RATING = 5;
+export const TIME_FOR_DEBOUNCE = 1000;
 
 export enum AppRoute {
   Root = '/',
@@ -14,7 +15,7 @@ export enum AppRoute {
 }
 
 export enum Category {
-  Photocamera = 'Фотокамера',
+  Photocamera = 'Фотоаппарат',
   Videocamera = 'Видеокамера'
 }
 
@@ -31,9 +32,28 @@ export enum CameraLevel {
   Professional = 'Профессиональный'
 }
 
-export enum SortType {
-  SortPrice = 'по цене',
-  SortPopular = 'по популярности'
+export type CamerasParams = {
+  start: number;
+  limit: number;
+  sort?: SortData;
+  order?: OrderData;
+  categories?: Category[];
+  types?: CameraType[];
+  levels?: CameraLevel[];
+  fromPrice?: number;
+  toPrice?: number;
+};
+
+export enum SortData {
+  Idle = '',
+  Price = 'price',
+  Rating = 'rating'
+}
+
+export enum OrderData {
+  Idle = '',
+  Ascending = 'asc',
+  Descending = 'desc'
 }
 
 export const SortOrder = {

@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Action } from 'redux';
-import { AppRoute, CAMERAS_PER_PAGE, FetchStatus, START_PAGE, NameSpace } from '../../const';
+import { AppRoute, CAMERAS_PER_PAGE, FetchStatus, START_PAGE, NameSpace, Category, CameraType, CameraLevel } from '../../const';
 import { createAPI } from '../../services/api';
 import { makeFakeCamera, makeFakePastReview, makeFakePromo } from '../../utils/mock';
 import HistoryRouter from '../history-router/history-router';
@@ -40,7 +40,10 @@ const store = mockStore({
   [NameSpace.Ui]: {
     currentPage: START_PAGE,
     camerasPerPage: CAMERAS_PER_PAGE,
-    pages: 1
+    pages: 1,
+    categories: [Category.Photocamera],
+    cameraTypes: [CameraType.Digital],
+    cameraLevels: [CameraLevel.Professional]
   },
   [NameSpace.Modals]: {
     activeCamera: fakeCurrentCamera,
