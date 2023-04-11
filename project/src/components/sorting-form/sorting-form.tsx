@@ -25,6 +25,7 @@ function SortingForm (): JSX.Element {
     if (orderType === OrderData.Idle) {
       dispatch(setOrderType({orderType: OrderData.Ascending}));
     }
+
     dispatch(changePage({page: START_PAGE}));
     dispatch(setSortType({sortType: sortBy}));
   };
@@ -33,6 +34,7 @@ function SortingForm (): JSX.Element {
     if (sortType === SortData.Idle) {
       dispatch(setSortType({sortType: SortData.Price}));
     }
+
     dispatch(changePage({page: START_PAGE}));
     dispatch(setOrderType({orderType: order}));
   };

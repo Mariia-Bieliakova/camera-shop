@@ -15,6 +15,7 @@ import { getAddToCartModalStatus } from '../../store/modals/selectors';
 import FullpageSpinner from '../../components/fullpage-spinner/fullpage-spinner';
 import ErrorScreen from '../error-screen/error-screen';
 import CardsList from '../../components/cards-list/cards-list';
+import { useSearchParams } from 'react-router-dom';
 
 function Main (): JSX.Element {
   const currentPage = useAppSelector(getCurrentPage);
@@ -29,6 +30,7 @@ function Main (): JSX.Element {
   const typeFilters = useAppSelector(getCameraTypes);
   const fromPrice = useAppSelector(getFromPrice);
   const toPrice = useAppSelector(getToPrice);
+  const [, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -39,9 +41,17 @@ function Main (): JSX.Element {
       limit: CAMERAS_PER_PAGE
     };
 
+    let searchParams: {[key: string]: string} = {};
+
     if (sortType || orderType ) {
       params = {
         ...params,
+        sort: sortType,
+        order: orderType
+      };
+
+      searchParams = {
+        ...searchParams,
         sort: sortType,
         order: orderType
       };
@@ -52,12 +62,22 @@ function Main (): JSX.Element {
         ...params,
         categories: categoryFilters
       };
+
+      searchParams = {
+        ...searchParams,
+        categories: categoryFilters.join(',')
+      };
     }
 
     if (levelFilters.length > 0) {
       params = {
         ...params,
         levels: levelFilters
+      };
+
+      searchParams = {
+        ...searchParams,
+        levels: levelFilters.join(',')
       };
     }
 
@@ -66,12 +86,22 @@ function Main (): JSX.Element {
         ...params,
         types: typeFilters
       };
+
+      searchParams = {
+        ...searchParams,
+        types: typeFilters.join(',')
+      };
     }
 
     if (fromPrice) {
       params = {
         ...params,
         fromPrice
+      };
+
+      searchParams = {
+        ...searchParams,
+        'price_gte': String(fromPrice)
       };
     }
 
@@ -80,10 +110,16 @@ function Main (): JSX.Element {
         ...params,
         toPrice
       };
+
+      searchParams = {
+        ...searchParams,
+        'price_lte': String(toPrice)
+      };
     }
 
+    setSearchParams(searchParams);
     dispatch(fetchCamerasPerPage(params));
-  }, [sortType, orderType, currentPage, dispatch, categoryFilters, levelFilters, typeFilters, fromPrice, toPrice]);
+  }, [sortType, orderType, currentPage, dispatch, categoryFilters, levelFilters, typeFilters, fromPrice, toPrice, setSearchParams]);
 
   if (isLoading) {
     return <FullpageSpinner size='big'/>;
