@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { generatePath, Link } from 'react-router-dom';
+import { generatePath, Link, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getCurrentPage, getPagesCount } from '../../store/ui/selectors';
@@ -12,6 +12,7 @@ function Pagination ():JSX.Element {
   const prevPage = currentPage - 1;
   const nextPage = currentPage + 1;
   const pages = [...Array(pagesCount).keys()].map((el) => el + 1);
+  const [searchParams] = useSearchParams();
 
   const handlePageClick = (page: number) => () => {
     dispatch(changePage({page}));
@@ -26,7 +27,7 @@ function Pagination ():JSX.Element {
           <li className="pagination__item">
             <Link
               className="pagination__link pagination__link--text"
-              to={`${AppRoute.Root}${generatePath(AppRoute.Catalog, {page: String(prevPage)})}`}
+              to={`${AppRoute.Root}${generatePath(AppRoute.Catalog, {page: String(prevPage)})}?${searchParams.toString()}`}
               onClick={handlePageClick(prevPage)}
             >Назад
             </Link>
@@ -41,7 +42,7 @@ function Pagination ():JSX.Element {
             <li className="pagination__item" key={page}>
               <Link
                 className={className}
-                to={`${AppRoute.Root}${generatePath(AppRoute.Catalog, {page: String(page)})}`}
+                to={`${AppRoute.Root}${generatePath(AppRoute.Catalog, {page: String(page)})}?${searchParams.toString()}`}
                 onClick={handlePageClick(page)}
               > {page}
               </Link>
@@ -52,7 +53,7 @@ function Pagination ():JSX.Element {
           <li className="pagination__item">
             <Link
               className="pagination__link pagination__link--text"
-              to={`${AppRoute.Root}${generatePath(AppRoute.Catalog, {page: String(nextPage)})}`}
+              to={`${AppRoute.Root}${generatePath(AppRoute.Catalog, {page: String(nextPage)})}?${searchParams.toString()}`}
               onClick={handlePageClick(nextPage)}
             >Далее
             </Link>

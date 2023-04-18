@@ -6,10 +6,10 @@ import Pagination from '../../components/pagination/pagination';
 import Layout from '../../components/layout/layout';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getCamerasOnPage, selectCamerasStatus } from '../../store/cameras/selectors';
-import { getCameraLevels, getCameraTypes, getCategories, getCurrentPage, getFromPrice, getOrderType, getSortType, getToPrice } from '../../store/ui/selectors';
+import { getCurrentPage } from '../../store/ui/selectors';
 import { useEffect } from 'react';
 import { fetchCamerasPerPage } from '../../store/api-actions';
-import { CamerasParams, CAMERAS_PER_PAGE } from '../../const';
+import { CameraLevel, CamerasParams, CAMERAS_PER_PAGE, CameraType, Category, OrderData, SortData } from '../../const';
 import ModalAddCart from '../../components/modal-add-cart/modal-add-cart';
 import { getAddToCartModalStatus } from '../../store/modals/selectors';
 import FullpageSpinner from '../../components/fullpage-spinner/fullpage-spinner';
@@ -23,103 +23,98 @@ function Main (): JSX.Element {
   const camerasOnPage = useAppSelector(getCamerasOnPage);
   const {isError, isLoading} = useAppSelector(selectCamerasStatus);
   const isModalActive = useAppSelector(getAddToCartModalStatus);
-  const sortType = useAppSelector(getSortType);
-  const orderType = useAppSelector(getOrderType);
-  const categoryFilters = useAppSelector(getCategories);
-  const levelFilters = useAppSelector(getCameraLevels);
-  const typeFilters = useAppSelector(getCameraTypes);
-  const fromPrice = useAppSelector(getFromPrice);
-  const toPrice = useAppSelector(getToPrice);
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const startIndex = (currentPage - 1) * CAMERAS_PER_PAGE;
+
+    const photocameraParam = searchParams.get(Category.Photocamera);
+    const videocameraParam = searchParams.get(Category.Videocamera);
+
+    const categoryParams = [photocameraParam, videocameraParam];
+    const categories = Object.values(Category).reduce((acc: Category[], cur, i) => {
+      if (categoryParams[i]) {
+        return [...acc, cur];
+      }
+      return acc;
+    }, []);
+
+    const nonProfessionalParam = searchParams.get(CameraLevel.NonProfessional);
+    const professionalParam = searchParams.get(CameraLevel.Professional);
+    const zeroParam = searchParams.get(CameraLevel.Zero);
+
+    const levelsParams = [zeroParam, nonProfessionalParam, professionalParam];
+    const levels = Object.values(CameraLevel).reduce((acc: CameraLevel[], cur, i) => {
+      if (levelsParams[i]) {
+        return [...acc, cur];
+      }
+      return acc;
+    }, []);
+
+    const digitalParam = searchParams.get(CameraType.Digital);
+    const filmParam = searchParams.get(CameraType.Film);
+    const snapshotParam = searchParams.get(CameraType.Snapshot);
+    const collectionParam = searchParams.get(CameraType.Collection);
+
+    const typeParams = [digitalParam, filmParam, snapshotParam, collectionParam];
+    const types = Object.values(CameraType).reduce((acc: CameraType[], cur, i) => {
+      if (typeParams[i]) {
+        return [...acc, cur];
+      }
+      return acc;
+    }, []);
 
     let params: CamerasParams = {
       start: startIndex,
       limit: CAMERAS_PER_PAGE
     };
 
-    let searchParams: {[key: string]: string} = {};
-
-    if (sortType || orderType ) {
+    if (searchParams.get('sort')) {
       params = {
         ...params,
-        sort: sortType,
-        order: orderType
-      };
-
-      searchParams = {
-        ...searchParams,
-        sort: sortType,
-        order: orderType
+        sort: searchParams.get('sort') === SortData.Price ? SortData.Price : SortData.Rating,
+        order: searchParams.get('order') === OrderData.Ascending ? OrderData.Ascending : OrderData.Descending
       };
     }
 
-    if (categoryFilters.length > 0) {
+    if (categories.length > 0) {
       params = {
         ...params,
-        categories: categoryFilters
-      };
-
-      searchParams = {
-        ...searchParams,
-        categories: categoryFilters.join(',')
+        categories: categories
       };
     }
 
-    if (levelFilters.length > 0) {
+    if (levels.length > 0) {
       params = {
         ...params,
-        levels: levelFilters
-      };
-
-      searchParams = {
-        ...searchParams,
-        levels: levelFilters.join(',')
+        levels: levels
       };
     }
 
-    if (typeFilters.length > 0) {
+    if (types.length > 0) {
       params = {
         ...params,
-        types: typeFilters
-      };
-
-      searchParams = {
-        ...searchParams,
-        types: typeFilters.join(',')
+        types: types
       };
     }
 
-    if (fromPrice) {
+    if (searchParams.get('price_gte')) {
       params = {
         ...params,
-        fromPrice
-      };
-
-      searchParams = {
-        ...searchParams,
-        'price_gte': String(fromPrice)
+        fromPrice: Number(searchParams.get('price_gte'))
       };
     }
 
-    if (toPrice) {
+    if (searchParams.get('price_lte')) {
       params = {
         ...params,
-        toPrice
-      };
-
-      searchParams = {
-        ...searchParams,
-        'price_lte': String(toPrice)
+        toPrice: Number(searchParams.get('price_lte'))
       };
     }
 
-    setSearchParams(searchParams);
     dispatch(fetchCamerasPerPage(params));
-  }, [sortType, orderType, currentPage, dispatch, categoryFilters, levelFilters, typeFilters, fromPrice, toPrice, setSearchParams]);
+  }, [currentPage, dispatch, searchParams]);
 
   if (isLoading) {
     return <FullpageSpinner size='big'/>;

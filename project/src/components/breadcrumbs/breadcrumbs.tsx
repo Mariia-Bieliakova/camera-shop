@@ -1,18 +1,29 @@
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, START_PAGE } from '../../const';
+import { useAppDispatch } from '../../hooks';
+import { changePage } from '../../store/ui/ui';
 
 type BreadcrumbsProps = {
   productName?: string;
 }
 
 function Breadcrumbs ({productName}: BreadcrumbsProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const handleMainClick = () => {
+    dispatch(changePage({page: START_PAGE}));
+  };
 
   return (
     <div className="breadcrumbs">
       <div className="container">
         <ul className="breadcrumbs__list">
           <li className="breadcrumbs__item">
-            <Link className="breadcrumbs__link" to={AppRoute.Root}>Главная
+            <Link
+              className="breadcrumbs__link"
+              to={AppRoute.Root}
+              onClick={handleMainClick}
+            >Главная
               <svg width="5" height="8" aria-hidden="true">
                 <use xlinkHref="#icon-arrow-mini" />
               </svg>

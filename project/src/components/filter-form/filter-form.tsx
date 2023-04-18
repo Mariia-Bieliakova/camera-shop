@@ -1,20 +1,26 @@
 import { ChangeEvent } from 'react';
 import { CameraLevel, CameraType, Category, START_PAGE, TIME_FOR_DEBOUNCE } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getCameraLevels, getCameraTypes, getCategories, getCurrentPage, getFromPrice, getMaximumPrice, getMinimalPrice, getToPrice} from '../../store/ui/selectors';
+import { getCurrentPage, getFromPrice, getMaximumPrice, getMinimalPrice} from '../../store/ui/selectors';
 import { changePage, clearFilters, setCameraLevel, setCameraType, setCategory, setFromPrice, setToPrice } from '../../store/ui/ui';
 import { debounce } from 'ts-debounce';
+import { useSearchParams } from 'react-router-dom';
+
+const PRICE_FROM = 'price_gte';
+const PRICE_TO = 'price_lte';
+const LEVEL = 'level';
+const TYPE = 'type';
+const CATEGORY = 'category';
 
 function FilterForm (): JSX.Element {
   const dispatch = useAppDispatch();
-  const levels = useAppSelector(getCameraLevels);
-  const types = useAppSelector(getCameraTypes);
-  const categories = useAppSelector(getCategories);
   const currentPage = useAppSelector(getCurrentPage);
   const minimalPrice = useAppSelector(getMinimalPrice);
   const maximumPrice = useAppSelector(getMaximumPrice);
   const fromPrice = useAppSelector(getFromPrice);
-  const toPrice = useAppSelector(getToPrice);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const priceLte = searchParams.get(PRICE_TO);
+  const priceGte = searchParams.get(PRICE_FROM);
 
   const goOnStartPage = () => {
     if (currentPage !== START_PAGE) {
@@ -22,19 +28,49 @@ function FilterForm (): JSX.Element {
     }
   };
 
-  const handleLevelInputChange = (levelData: CameraLevel) => () => {
+  const handleLevelInputChange = (levelData: CameraLevel) => (evt: ChangeEvent<HTMLInputElement>) => {
     dispatch(setCameraLevel({cameraLevel: levelData}));
     goOnStartPage();
+
+    setSearchParams(() => {
+      if (evt.target.checked) {
+        searchParams.append(levelData, LEVEL);
+      } else {
+        searchParams.delete(levelData);
+      }
+
+      return searchParams;
+    });
   };
 
-  const handleTypeInputChange = (typeData: CameraType) => () => {
+  const handleTypeInputChange = (typeData: CameraType) => (evt: ChangeEvent<HTMLInputElement>) => {
     dispatch(setCameraType({cameraType: typeData}));
     goOnStartPage();
+
+    setSearchParams(() => {
+      if (evt.target.checked) {
+        searchParams.append(typeData, TYPE);
+      } else {
+        searchParams.delete(typeData);
+      }
+
+      return searchParams;
+    });
   };
 
-  const handleCategoryInputChange = (categoryData: Category) => () => {
+  const handleCategoryInputChange = (categoryData: Category) => (evt: ChangeEvent<HTMLInputElement>) => {
     dispatch(setCategory({category: categoryData}));
     goOnStartPage();
+
+    setSearchParams(() => {
+      if (evt.target.checked) {
+        searchParams.append(categoryData, CATEGORY);
+      } else {
+        searchParams.delete(categoryData);
+      }
+
+      return searchParams;
+    });
   };
 
   const handleFromPriceInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +81,10 @@ function FilterForm (): JSX.Element {
       price = minimalPrice;
     }
 
+    setSearchParams(() => {
+      searchParams.set('price_gte', String(price));
+      return searchParams;
+    });
     dispatch(setFromPrice({fromPrice: price}));
     goOnStartPage();
   };
@@ -69,6 +109,11 @@ function FilterForm (): JSX.Element {
       price = maximumPrice;
     }
 
+    setSearchParams(() => {
+      searchParams.set(PRICE_TO, String(price));
+      return searchParams;
+    });
+
     dispatch(setToPrice({toPrice: price}));
     goOnStartPage();
   };
@@ -77,25 +122,34 @@ function FilterForm (): JSX.Element {
 
   const handleResetButtonClick = () => {
     dispatch(clearFilters());
+    setSearchParams(() => {
+      searchParams.delete(PRICE_FROM);
+      searchParams.delete(PRICE_TO);
+      Object.values(Category).forEach((value) => searchParams.delete(value));
+      Object.values(CameraLevel).forEach((value) => searchParams.delete(value));
+      Object.values(CameraType).forEach((value) => searchParams.delete(value));
+
+      return searchParams;
+    });
   };
 
   let upPlaceholder = 'до';
 
-  if (toPrice) {
-    upPlaceholder = String(toPrice);
+  if (priceLte) {
+    upPlaceholder = priceLte;
   }
 
-  if (!toPrice && maximumPrice) {
+  if (!priceLte && maximumPrice) {
     upPlaceholder = String(maximumPrice);
   }
 
   let fromPlaceholder = 'от';
 
-  if (fromPrice) {
-    fromPlaceholder = String(fromPrice);
+  if (priceGte) {
+    fromPlaceholder = priceGte;
   }
 
-  if (!fromPrice && minimalPrice) {
+  if (!priceGte && minimalPrice) {
     fromPlaceholder = String(minimalPrice);
   }
 
@@ -139,7 +193,7 @@ function FilterForm (): JSX.Element {
                 type="checkbox"
                 name={name}
                 onChange={handleCategoryInputChange(value)}
-                checked={categories.includes(value)}
+                checked={searchParams.get(value) !== null}
               />
               <span className="custom-checkbox__icon" />
               <span className="custom-checkbox__label">{value}</span>
@@ -158,8 +212,8 @@ function FilterForm (): JSX.Element {
                 type="checkbox"
                 name={name}
                 onChange={handleTypeInputChange(value)}
-                checked={types.includes(value)}
-                disabled={categories.includes(Category.Videocamera) && (value === CameraType.Film || value === CameraType.Snapshot)}
+                checked={searchParams.get(value) !== null}
+                disabled={searchParams.get(Category.Videocamera) !== null && (value === CameraType.Film || value === CameraType.Snapshot)}
               />
               <span className="custom-checkbox__icon" />
               <span className="custom-checkbox__label">{value}</span>
@@ -178,7 +232,7 @@ function FilterForm (): JSX.Element {
                 type="checkbox"
                 name={name}
                 onChange={handleLevelInputChange(value)}
-                checked={levels.includes(value)}
+                checked={searchParams.get(value) !== null}
               />
               <span className="custom-checkbox__icon" />
               <span className="custom-checkbox__label">{value}</span>
