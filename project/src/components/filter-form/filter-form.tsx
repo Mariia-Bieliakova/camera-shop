@@ -1,10 +1,10 @@
 import { ChangeEvent } from 'react';
 import { CameraLevel, CameraType, Category, START_PAGE, TIME_FOR_DEBOUNCE } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getCurrentPage, getFromPrice, getMaximumPrice, getMinimalPrice} from '../../store/ui/selectors';
+import { getCurrentPage, getMaximumPrice, getMinimalPrice} from '../../store/ui/selectors';
 import { changePage, clearFilters, setCameraLevel, setCameraType, setCategory, setFromPrice, setToPrice } from '../../store/ui/ui';
-import { debounce } from 'ts-debounce';
 import { useSearchParams } from 'react-router-dom';
+import { debounce } from 'ts-debounce';
 
 const PRICE_FROM = 'price_gte';
 const PRICE_TO = 'price_lte';
@@ -17,7 +17,6 @@ function FilterForm (): JSX.Element {
   const currentPage = useAppSelector(getCurrentPage);
   const minimalPrice = useAppSelector(getMinimalPrice);
   const maximumPrice = useAppSelector(getMaximumPrice);
-  const fromPrice = useAppSelector(getFromPrice);
   const [searchParams, setSearchParams] = useSearchParams();
   const priceLte = searchParams.get(PRICE_TO);
   const priceGte = searchParams.get(PRICE_FROM);
@@ -64,6 +63,10 @@ function FilterForm (): JSX.Element {
 
     setSearchParams(() => {
       if (evt.target.checked) {
+        if(categoryData === Category.Videocamera) {
+          searchParams.delete(CameraType.Film);
+          searchParams.delete(CameraType.Snapshot);
+        }
         searchParams.append(categoryData, CATEGORY);
       } else {
         searchParams.delete(categoryData);
@@ -74,48 +77,52 @@ function FilterForm (): JSX.Element {
   };
 
   const handleFromPriceInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let price = Number(e.target.value);
-
-    if (price < minimalPrice) {
-      e.target.value = String(minimalPrice);
-      price = minimalPrice;
-    }
-
-    setSearchParams(() => {
-      searchParams.set('price_gte', String(price));
-      return searchParams;
-    });
-    dispatch(setFromPrice({fromPrice: price}));
-    goOnStartPage();
-  };
-
-  const debouncedFromPriceInputHandler = debounce(handleFromPriceInputChange, TIME_FOR_DEBOUNCE);
-
-  const handleToPriceInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let price = Number(e.target.value);
+    const price = Number(e.target.value);
 
     if (price < 0) {
       e.target.value = '';
       return;
     }
 
-    if (price < minimalPrice || (fromPrice && price < fromPrice)) {
+    if (price >= minimalPrice && price <= maximumPrice) {
+      if (priceLte && (price > Number(priceLte))) {
+        e.target.value = '';
+        return;
+      }
+
+      setSearchParams(() => {
+        searchParams.set('price_gte', String(price));
+        return searchParams;
+      });
+
+      dispatch(setFromPrice({fromPrice: price}));
+      goOnStartPage();
+    }
+  };
+
+  const debouncedFromPriceInputHandler = debounce(handleFromPriceInputChange, TIME_FOR_DEBOUNCE);
+
+  const handleToPriceInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const price = Number(e.target.value);
+
+    if (price < 0) {
       e.target.value = '';
       return;
     }
 
-    if (price > maximumPrice) {
-      e.target.value = String(maximumPrice);
-      price = maximumPrice;
+    if (price >= minimalPrice && price <= maximumPrice) {
+      if (priceGte && price < Number(priceGte)) {
+        return;
+      }
+
+      setSearchParams(() => {
+        searchParams.set(PRICE_TO, String(price));
+        return searchParams;
+      });
+
+      dispatch(setToPrice({toPrice: price}));
+      goOnStartPage();
     }
-
-    setSearchParams(() => {
-      searchParams.set(PRICE_TO, String(price));
-      return searchParams;
-    });
-
-    dispatch(setToPrice({toPrice: price}));
-    goOnStartPage();
   };
 
   const debouncedToPriceInputHandler = debounce(handleToPriceInputChange, TIME_FOR_DEBOUNCE);
@@ -135,21 +142,13 @@ function FilterForm (): JSX.Element {
 
   let upPlaceholder = 'до';
 
-  if (priceLte) {
-    upPlaceholder = priceLte;
-  }
-
-  if (!priceLte && maximumPrice) {
+  if (maximumPrice) {
     upPlaceholder = String(maximumPrice);
   }
 
   let fromPlaceholder = 'от';
 
-  if (priceGte) {
-    fromPlaceholder = priceGte;
-  }
-
-  if (!priceGte && minimalPrice) {
+  if (minimalPrice) {
     fromPlaceholder = String(minimalPrice);
   }
 

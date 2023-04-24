@@ -32,7 +32,6 @@ function SearchForm (): JSX.Element {
       return (
         <li
           className="form-search__select-item"
-          tabIndex={0}
         >
         Ничего не найдено
         </li>);
@@ -72,7 +71,6 @@ function SearchForm (): JSX.Element {
               <Link to={`${AppRoute.Root}${generatePath(AppRoute.Product, {id: String(camera.id)})}`} key={camera.id}>
                 <li
                   className="form-search__select-item"
-                  tabIndex={0}
                 > {camera.name}
                 </li>
               </Link>)) :
